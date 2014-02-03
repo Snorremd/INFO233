@@ -5,9 +5,12 @@
  */
 package io;
 
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import javax.swing.SwingWorker;
 
 import utils.Config;
 
@@ -23,11 +26,13 @@ import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
 
+import controllers.TweetConsumer;
+
 /**
  * @author Snorre Davøen
  *
  */
-public class TwitterStream implements Runnable {
+public class TwitterStream extends SwingWorker<Void, String> {
 	
 	private BlockingQueue<String> messageQueue;
 	private BlockingQueue<Event> eventQueue;
@@ -36,63 +41,82 @@ public class TwitterStream implements Runnable {
 	private Hosts hosebirdHosts;
 	private StreamingEndpoint endpoint;
 	private Authentication hosebirdAuth;
+	private ClientBuilder clientBuilder;
 	
-	public TwitterStream(BlockingQueue<String> messageQueue) {
-		this.messageQueue = messageQueue;
-		Properties oauthCredentials = Config.getTwitterProperties();
+	private TweetConsumer consumer;
+	
+	public TwitterStream(TweetConsumer consumer) {
 		
-		// Fetch each property and store in string variables
+		this.consumer = consumer;
+		this.messageQueue = new LinkedBlockingQueue<String>(1000);
+		
+		// Fetch authentication properties and store them in string variables
+		Properties oauthCredentials = Config.getTwitterProperties();
 		String consumerKey = oauthCredentials.getProperty("consumerKey");
 		String consumerSecret = oauthCredentials.getProperty("consumerSecret");
 		String token = oauthCredentials.getProperty("token");
 		String secret = oauthCredentials.getProperty("secret");
 		
-		// Create new Authentication object
+		// Create new Authentication object for use with the hose bird client
 		hosebirdAuth = new OAuth1(consumerKey, consumerSecret, token, secret);
 		
-		// Create hosebird hosts
+		// Create hosebird host (we want to connect to streaming api)
 		Hosts hosebirdHosts = new HttpHosts(Constants.STREAM_HOST);
-		//StreamingEndpoint hosebirdEndpoint2 = new StatusesFilterEndpoint();
+		
+		// Create an endpoint filter that filters the stream on a boxed geo position
 		StatusesFilterEndpoint hosebirdEndpoint = new StatusesFilterEndpoint();
-		hosebirdEndpoint.addPostParameter("locations", "5.10,60.23,5.50,60.46");
+		
+		String southWestLat = "57.00";
+		String southWestLong = "2.55";
+		String northEastLat = "64.00";
+		String northEastLong = "12.00";
+		
+		String location = ""
+						+ southWestLong + "," 
+						+ southWestLat  + ","
+						+ northEastLong  + ","
+						+ northEastLat;
+						
+		hosebirdEndpoint.addPostParameter("locations", location);
+		
 		
 		// Build a hosebird client
-		ClientBuilder clientBuilder = new ClientBuilder()
-				.name("Hosebird-Client-01")
-				.hosts(hosebirdHosts)
-				.authentication(hosebirdAuth)
-				.endpoint(hosebirdEndpoint)
-				.processor(new StringDelimitedProcessor(messageQueue))
-				.eventMessageQueue(eventQueue);
-		
-		hosebirdClient = clientBuilder.build();
-	}
-	
-	public static void main(String[] args) {
-		
-		BlockingQueue<String> messageQueue = new LinkedBlockingQueue<String>(1000);
-		TwitterStream stream = new TwitterStream(messageQueue);
-		Thread streamThread = new Thread(stream);
-		streamThread.run();
+		clientBuilder = new ClientBuilder()
+			.name("Hosebird-Client-01")
+			.hosts(hosebirdHosts)
+			.authentication(hosebirdAuth)
+			.endpoint(hosebirdEndpoint)
+			.processor(new StringDelimitedProcessor(messageQueue))
+			.eventMessageQueue(eventQueue);
 	}
 
-	public void run() {
+	@Override
+	protected Void doInBackground() throws Exception {
+		// Build a new hosebird client and connect
+		hosebirdClient = clientBuilder.build();
 		hosebirdClient.connect();
 		
-		while (!hosebirdClient.isDone()) {
-			  String msg;
+		// While there are still more tweets in this stream
+		while(!hosebirdClient.isDone()) {
+			String tweet;
 			try {
-				msg = messageQueue.take();
-				System.out.println(msg);
+				// Consume tweet (if any left else catch interrupted exception)
+				tweet = messageQueue.take();
+				System.out.println("Publish tweet");
+				publish(tweet);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				hosebirdClient.stop();
-			} catch(Exception e) {
-				// Just in case
+				// No elements in message queue or interrupted by gui
+				System.out.println("Swing worker twitter stream interrupted");
 				hosebirdClient.stop();
 			}
 		}
-		
+		return null;
+	}
+	
+	@Override
+	protected void process(List<String> tweets) {
+		// Call the consumeTweets method in the consumer (controller)
+		System.out.println("Process tweets " + tweets);
+		consumer.consumeTweets(tweets);
 	}
 }
