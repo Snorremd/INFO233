@@ -1,0 +1,42 @@
+Obligatorisk oppgave info233, kladd.
+
+\subsection{Oppgave 0}
+Dette prosjektet omhandler et system for nedlasting av tweets, dvs. meldinger fra Twitter. Dere skal først definere datatyper som behøvs. td. TwitterMelding, TwitterBruker, osv. % (Gir vi de interfjes for dette?)
+Du må også definere enhetstester (JUnit) for klassene dine, for alle relevante metoder. Husk (toHash og) equals! Disse er viktige datatyper, og en bør vite hvordan de skal fungere.
+Sett deg inn i hvordan du skal bruke koden som vi har gitt deg, det sparer deg for problemer i lengden.
+
+ 
+\subsection{Oppgave 1} Du skal laste ned tweets fra et bestemt sted til en liste (java.util.List, ikke den i awt) og returnere denne. Dere skal ha en main metode som tester denne klassen ved å instanisere den, laste ned en liste, og skrive den ut.
+Husk å definer JUnit tester for å sjekke at alt er korrekt.
+ 
+\subsection{Oppgave 2} Du skal lage et grafisk grensesnitt for å vise tweetene.
+Vi godtar enkle løsninger, men det må være ryddig.
+ 
+\subsection{Oppgave 3}  Lagring, dvs. serialisering og deserialisering.
+Du skal lagre og lese opp data fra disk.
+Husk enhetstesting! (Husk også at filen må slettes, sjekk File#deleteOnExit())
+ 
+\subsection{Oppgave 4} Filtrering og framvisning: Du skal la brukeren sortere tweets etter tid (stigende og synkende), og vise tweets fra bare en bestemt bruker.
+
+% Trikset her blir vel compareTo, samt filtermetoder og predikater?
+% for(TwitterTweet tt : tweets){
+%  if(predikat(tt)){
+%    samling.add(tt);
+%  }
+%}
+ 
+Statistikk på forfattere:
+ Antall tweets
+ Totalt tegn i tweets
+ Gjennomsnittslig antall tegn per tweet. % Husk heltallsdivisjon
+
+Fiks ÆØÅ
+ Det ser ikke ut, og vi vil at det skal se ut.
+ Dette må fikses.
+ 
+\subsection{Bonuspoeng}
+Ideer:
+
+Ordfrekvens
+Tweets med banneord?
+
