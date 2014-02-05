@@ -16,8 +16,8 @@ public class Gruppeleder {
 	 * @param powerlevel hvor sterk gruppelederen er. {@link http://www.youtube.com/watch?v=SiMHTK15Pik}
 	 */
 	public Gruppeleder(String namn, Integer powerlevel) {
-		this.namn = "Navn ikke funnet";
-		this.powerlevel = 0;
+		this.namn = namn;
+		this.powerlevel = powerlevel;
 	}
 
 
@@ -54,7 +54,7 @@ public class Gruppeleder {
 				powerlevel = jp.getIntValue();
 				break;
 			default:
-				System.err.printf("Ukjent felt: %s%n", jp.getCurrentName());
+				System.out.printf("Ukjent felt: %s%n", jp.getCurrentName());
 				break;
 			}
 		}
@@ -107,20 +107,16 @@ public class Gruppeleder {
 		
 		// Leser inn Haakon
 		parser = jsonFactory.createParser(jsonHaakon);
-		Gruppeleder haakon = Gruppeleder.lesFraJson(parser);
+		System.out.println(Gruppeleder.lesFraJson(parser));
 		
 		// Leser inn Snorre
 		parser = jsonFactory.createParser(jsonSnorre);
-		Gruppeleder snorre = Gruppeleder.lesFraJson(parser);
+		System.out.println(Gruppeleder.lesFraJson(parser));
 		
 		// Leser inn Derpus Maximus
 		parser = jsonFactory.createParser(jsonDerpus);
-		Gruppeleder derpus = Gruppeleder.lesFraJson(parser);
+		System.out.println(Gruppeleder.lesFraJson(parser));
 		
-		// Til slutt skriver vi dem ut.
-		System.out.println(haakon);
-		System.out.println(snorre);
-		System.out.println(derpus);
 	}
 
 }

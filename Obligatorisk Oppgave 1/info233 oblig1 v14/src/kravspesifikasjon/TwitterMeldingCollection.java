@@ -77,4 +77,28 @@ public interface TwitterMeldingCollection extends Serializable {
 	 * @return true dersom den ble slettet, og ellers false
 	 */
 	public boolean deleteTweet(String id);
+	
+	/**
+	 * Hent ut en samling meldinger, sortert på tid.
+	 * Dersom to meldinger skulle vært publisrt på samme tid, er det uviktig hvilken av dem som skal ut først.
+	 * @param nyesteFørst true dersom de nyeste meldingene skal ut først, false dersom de eldste skal ut først.
+	 * @return en samling sortert etter kriteriene
+	 */
+	public Collection<TwitterMelding> sortertEtterTid(boolean nyesteFørst);
+	
+	/**
+	 * Hent ut en samling meldinger, sortert på lengde.
+	 * Med lengde menes antall tegn.
+	 * Dersom to meldinger har samme lengde er det uviktig hvilken av dem som skal først i samlingen.
+	 * @param lengsteFørst true dersom de lengste meldingene skal ut først, false dersom de korteste skal ut først.
+	 * @return en samling sortert etter kriteriene
+	 */
+	public Collection<TwitterMelding> sortertEtterLengde(boolean lengsteFørst);
+	
+	/**
+	 * Henter ut alle meldingene fra en bestemt bruker
+	 * @param bruker brukeren vi er ute etter
+	 * @return en ny TwitterMeldingCollection fylt med alle meldingene fra gitt bruker, og ingen andre. 
+	 */
+	public TwitterMeldingCollection meldingerFra(TwitterBruker bruker);
 }
