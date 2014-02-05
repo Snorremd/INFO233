@@ -1,0 +1,71 @@
+% PREAMBLE
+
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+
+% DOCUMENT
+\begin{document}
+Obligatorisk oppgave info233, kladd.
+
+\section{Frister, etc.}
+Lorem ipsum dolor sic amet.
+
+\section{Om obligen}
+I denne obligen skal dere implementere et system som henter ned twittermeldinger, og behandler dem på ulike måter.
+Les hele oppgaveteksten før dere setter i gang med oppgaven, og tenk igjennom hva dere vil gjøre og hvordan før dere begynner å skrive.
+Det vil spare dere for tid og frustrasjon.
+Vi setter som krav at dere skriver enhetstester (I JUnit) for koden deres.
+For å hjelpe dere litt i gang med tenkingen har vi gitt dere noen grensesnitt (interfjes) som beskriver metodene dere skal implementere.
+Hvordan dere implementerer disse, er helt opp til dere.
+
+\section{Obligen}
+
+Dette prosjektet omhandler et system for nedlasting av tweets, dvs. meldinger fra Twitter. Dere skal først definere datatyper som behøvs. td. TwitterMelding, TwitterBruker, osv.
+Du må også definere enhetstester (JUnit) for klassene dine, for alle relevante metoder. Husk equals og evt. compareTo dersom du skal sortere.
+Sett deg inn i hvordan du skal bruke koden som vi har gitt deg, det sparer deg for problemer i lengden.
+
+ 
+Du skal laste ned tweets fra et bestemt sted til en liste (\href{http://docs.oracle.com/javase/7/docs/api/java/util/List.html}{java.util.List}, ikke den i awt) og returnere denne. Dere skal ha en main metode som tester denne klassen ved å instanisere den, laste ned en liste, og skrive den ut.
+Husk å definere JUnit tester for å sjekke at alt er korrekt.
+ 
+Du skal lage et grafisk grensesnitt for å vise tweetene.
+Vi godtar enkle løsninger, men det må være ryddig.
+ 
+Lagring, dvs. serialisering og deserialisering.
+Du skal lagre og lese opp data fra disk. For enhetstesting kan \href{http://docs.oracle.com/javase/7/docs/api/java/io/File.html#deleteOnExit\%28\%29}{File\#deleteOnExit()} være relevant.
+    
+Filtrering og framvisning: Du skal la brukeren sortere tweets etter tid (stigende og synkende), og vise tweets fra bare en bestemt bruker.
+
+% Trikset her blir vel compareTo, samt filtermetoder og predikater?
+% for(TwitterTweet tt : tweets){
+%  if(predikat(tt)){
+%    samling.add(tt);
+%  }
+%}
+ 
+Statistikk på forfattere:
+ Antall tweets
+ Totalt tegn i tweets
+ Gjennomsnittslig antall tegn per tweet. % Husk heltallsdivisjon
+
+Fiks ÆØÅ
+ Det ser ikke ut, og vi vil at det skal se ut.
+ Dette må fikses.
+ 
+\subsection{Bonuspoeng}
+Ideer:
+
+Ordfrekvens
+Tweets med banneord?
+
+\section{Tips og triks}
+\subsection{gson biblioteket}
+Tweetene dere får er i JSON-formatet, \url{http://www.json.org/} og dere må selv hente data ut fra disse dataene.
+For å hjelpe dere med dette har vi lagt ved Jackson, et bibliotek for å behandle JSON-data.
+
+Vi har også med en demonstrasjon av bruken av dette biblioteket i prosjektet.
+Dersom dere lurer på hvordan en skal lese inn data fra JSON, så er demoen i aller høyeste grad relevant.
+
+\end{document}
