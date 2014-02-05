@@ -42,7 +42,6 @@ public class Gruppeleder {
 		   Ellers så går vi til neste token, og leser det. */
 		while(jp.nextToken() != JsonToken.END_OBJECT){
 			jp.nextToken();
-
 			/* Så sjekker vi hva feltet i JSON-objektet heter.
 			   Dersom det er et av de feltene vi kjenner igjen og er interessert i,
 			   så henter vi ut verdien. Her kjenner vi kun til namn og powerlevel.
@@ -55,7 +54,7 @@ public class Gruppeleder {
 				powerlevel = jp.getIntValue();
 				break;
 			default:
-				System.out.printf("Ukjent felt: %s%n", jp.getCurrentName());
+				System.err.printf("Ukjent felt: %s%n", jp.getCurrentName());
 				break;
 			}
 		}
