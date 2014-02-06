@@ -10,62 +10,152 @@
 Obligatorisk oppgave info233, kladd.
 
 \section{Frister, etc.}
-Lorem ipsum dolor sic amet.
+Utlevert [dato], frist [data] klokken [klokkeslett]
+Denne obligatoriske oppgaven vurderes til godkjent/ikke godkjent.
+De som ikke ikke leverer, etc.
+De som får ikke godkjent - ? (Ny endelig frist til å rette?)
 
-\section{Om obligen}
-I denne obligen skal dere implementere et system som henter ned twittermeldinger, og behandler dem på ulike måter.
-Les hele oppgaveteksten før dere setter i gang med oppgaven, og tenk igjennom hva dere vil gjøre og hvordan før dere begynner å skrive.
-Det vil spare dere for tid og frustrasjon.
-Vi setter som krav at dere skriver enhetstester (I JUnit) for koden deres.
-For å hjelpe dere litt i gang med tenkingen har vi gitt dere noen grensesnitt (interfjes) som beskriver metodene dere skal implementere.
-Hvordan dere implementerer disse, er helt opp til dere.
+Leveringsformatet er et Eclipseprosjekt, eksportert til en komprimert fil. (zip eller tar.gz?)
 
 \section{Obligen}
-
 Dette prosjektet omhandler et system for nedlasting av tweets, dvs. meldinger fra Twitter. Dere skal først definere datatyper som behøvs. td. TwitterMelding, TwitterBruker, osv.
 Du må også definere enhetstester (JUnit) for klassene dine, for alle relevante metoder. Husk equals og evt. compareTo dersom du skal sortere.
-Sett deg inn i hvordan du skal bruke koden som vi har gitt deg, det sparer deg for problemer i lengden.
+Det er en god ide å sjekke eksempler som ligger i prosjektet.
 
- 
-Du skal laste ned tweets fra et bestemt sted til en liste (\href{http://docs.oracle.com/javase/7/docs/api/java/util/List.html}{java.util.List}, ikke den i awt) og returnere denne. Dere skal ha en main metode som tester denne klassen ved å instanisere den, laste ned en liste, og skrive den ut.
-Husk å definere JUnit tester for å sjekke at alt er korrekt.
- 
-Du skal lage et grafisk grensesnitt for å vise tweetene.
-Vi godtar enkle løsninger, men det må være ryddig.
- 
-Lagring, dvs. serialisering og deserialisering.
-Du skal lagre og lese opp data fra disk. For enhetstesting kan \href{http://docs.oracle.com/javase/7/docs/api/java/io/File.html#deleteOnExit\%28\%29}{File\#deleteOnExit()} være relevant.
-    
-Filtrering og framvisning: Du skal la brukeren sortere tweets etter tid (stigende og synkende), og vise tweets fra bare en bestemt bruker.
+Dere står selvsagt fritt til å implementere flere metoder, hjelpemetoder, klasser osv.
+Vi legger oss heller ikke opp i hvordan dere velger å implementere klassene.
+De eneste kravene er at:
+\begin{enumerate}
+\item Dere har en GUI som er oversiktlig og brukendes
+\item Alle metodene som er spesifisert er korrekt.
+\item At dere kan lagre og åpne tidligere økter. (vha. serialisering)
+\item At dere har skrevet tester for å sjekke oppførsel (i JUnit).
+\item At koden er korrekt.
+\end{enumerate}
 
+På de neste sidene følger en oversikt over klassene og metodene som skal være med.
+Det følger med Interfacer i java som er mer utfyllende dokumentert der. Alle metodene skal være med.
+
+
+\newpage
+
+\subsection{TwitterMelding}
+\label{subsec:TwitterMelding}
+
+\begin{description}
+\item [getMeldingsTekst():String] \ \\ % Det må være en bedre måte å gjøre dette på.
+  Meldingsteksten som følger med tweeten.
+  Det er ikke nok å bare ta med teksten, du må også ta hånd om unicode escape sekvensene. Til dømes er \textbackslash u2013 en annen måte å skrive ``–'' på.
+\item [getBruker():TwitterBruker] \ \\
+  Skal returnere brukeren som sendte meldingen.
+  Alle meldinger skal ha en bruker
+\item [size():int] \ \\
+  Returnerer størrelsen på meldingen, per antall tegn.
+\item [dato():Calendar] \ \\
+  Returnerer når meldingen ble sendt, representert som et \href{http://docs.oracle.com/javase/7/docs/api/java/util/Calendar.html}{Calendar} objekt.
+\item [getID():String] \ \\
+  Returnerer den unike identiteten til meldingen.
+\end{description}
+\newpage
+\subsection{TwitterMeldingCollection}
+\label{subsec:TwitterMeldingCollection}
+\begin{description}
+\item [size():int] \ \\
+  Størrelsen på samlingen
+\item [insert(TwitterMelding element):boolean] \ \\
+  Setter inn en melding et sted i samlingen. boolskPLH
+\item [insert(TwitterMelding element, int index):boolean] \ \\
+  Setter inn en melding på angitt sted i samlingen. boolskPLH
+\item [remove(int index):boolean] \ \\
+  Fjerner et element på angitt sted i samlingen. boolskPLH
+\item [get(int index):TwitterMelding] \ \\
+  Henter ut en TwitterMelding på angitt sted i samlingen.
+\item [getTweetsWith(String word):Collection<TwitterMelding>] \ \\
+  Henter ut TwitterMeldinger med et angitt ord i en samling.
+\item [deleteTweet(TwitterMelding tm):boolean] \ \\
+  Sletter angitt melding fra samlingen. boolskPLH
+\item [getTweet(String id):TwitterMelding] \ \\
+  Returnerer en melding med gitt ID
+\item [deleteTweet(String id):boolean] \ \\
+  Sletter en melding med gitt ID. boolskPLH
+\item [sortertEtterTid(boolean nyesteFørst):Collection<TwitterMelding>] \ \\
+  Gir ut en samling av TwitterMeldinger som er sortert etter tid.
+  Dersom nyesteFørst er sann, skal de nyeste fremst i samlingen, ellers skal de eldste fremst.
+\item [sortertEtterLengde(boolean lengsteFørst):Collection<TwitterMelding>] \ \\
+  Gir ut en samling av TwitterMeldinger som er sortert etter lengde.
+  Dersom lengsteFørst er sann, skal de lengste fremst i samlingen, ellers skal de korteste først.
+\item [meldingerFra(TwitterBruker bruker):TwitterMeldingCollection] \ \\
+  Gir ut en TwitterMeldingCollection med alle meldingene fra den angitte brukeren.
+  Rekkefølgen spiller ingen rolle.
+\end{description}
+\newpage
+\subsection{TwitterBruker}
+\label{subsec:TwitterBruker}
+\begin{description}
+\item [getNavn():String] \ \\
+  Returnerer navnet på brukeren
+\item [getID():String] \ \\
+  Returnerer den unike IDen til brukeren.
+\item [numTweets():int] \ \\
+  Returnerer antall meldinger brukeren har sendt
+\item [setTweets(int numTweets):void] \ \\
+  Setter antall meldinger denne brukeren har sendt
+\item [numCharacters():int] \ \\
+  Henter ut det totale antall tegn i alle meldinger denne brukeren har sendt
+\item [getAverageNumCharacters():double] \ \\
+  Henter ut den gjennomsnittslige lengden på en melding fra en bruker.
+\item [numFollowers():int] \ \\
+  Returnerer antall followers denne brukeren har
+\item [setFollowers(int followers):void] \ \\
+  Setter antall followers denne brukeren har
+\item [numFriends():int] \ \\
+  Returnerer antall friends denne brukeren har
+\item [setFriends(int friends):void] \ \\
+  Setter antall friends denne brukeren har
+\end{description}
+\newpage
+\subsection{TwitterBrukerCollection}
+\label{subsec:TwitterBrukerCollection}
+
+\begin{description}
+\item [size():int] \ \\
+  Størrelsen på samlingen
+\item [insert(TwitterBruker tb):boolean] \ \\
+  Setter inn en bruker et sted i samlingen. boolskPLH
+\item [insert(E element, int index):boolean] \ \\
+  Setter inn en bruker på angitt sted i samlingen. boolskPLH
+\item [remove(int index):boolean] \ \\
+  Fjerner en bruker på angitt plass. boolskPLH
+\item [get(int index):TwitterBruker] \ \\
+  Henter en bruker fra angitt plass. boolskPLH
+\item [getBruker(String navn):TwitterBruker] \ \\
+  Henter ut en bruker fra samlingen
+\item [sortertEtterMeldinger(boolean stigende):Collection<TwitterBruker>] \ \\
+  Henter ut en samling av brukere, sortert etter antall meldinger.
+  Hvis stigende er sann, sorter i stigende rekkefølge, ellers i synkende rekkefølge.
+\item [sortertEtterAntallFollowers(boolean stigende):Collection<TwitterBruker>] \ \\
+  Henter ut en samling av brukere, sortert etter antall followers.
+  Hvis stigende er sann, sorter i stigende rekkefølge, ellers i synkende rekkefølge.
+\item [sortertEtterAntallFriends(boolean stigende):Collection<TwitterBruker>] \ \\
+  Henter ut en samling brukere, sortert etter antall friends.
+  Hvis stigende er sann, sorter i stigende rekkefølge, ellers i synkende rekkefølge.
+\end{description}
+
+%Gamle teksten.
 % Trikset her blir vel compareTo, samt filtermetoder og predikater?
 % for(TwitterTweet tt : tweets){
 %  if(predikat(tt)){
 %    samling.add(tt);
 %  }
 %}
- 
-Statistikk på forfattere:
- Antall tweets
- Totalt tegn i tweets
- Gjennomsnittslig antall tegn per tweet. % Husk heltallsdivisjon
-
-Fiks ÆØÅ
- Det ser ikke ut, og vi vil at det skal se ut.
- Dette må fikses.
- 
-\subsection{Bonuspoeng}
-Ideer:
-
-Ordfrekvens
-Tweets med banneord?
-
 \section{Tips og triks}
 \subsection{gson biblioteket}
-Tweetene dere får er i JSON-formatet, \url{http://www.json.org/} og dere må selv hente data ut fra disse dataene.
+Tweetene dere får er i \href{http://www.json.org/}{JSON-formatet}, og dere må selv hente data ut fra disse dataene.
 For å hjelpe dere med dette har vi lagt ved Jackson, et bibliotek for å behandle JSON-data.
 
 Vi har også med en demonstrasjon av bruken av dette biblioteket i prosjektet.
 Dersom dere lurer på hvordan en skal lese inn data fra JSON, så er demoen i aller høyeste grad relevant.
 
+StackOverflow og Java sine API sider er ellers særdeles nyttige.
+Til slutt foreslår vi at dere kommer på gruppene og spør spørsmål på ting dere sitter fast på.
 \end{document}
