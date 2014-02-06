@@ -5,6 +5,9 @@
  */
 package io;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
@@ -27,12 +30,13 @@ import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
 
 import controllers.TweetConsumer;
+import exceptions.TwitterConnectionException;
 
 /**
  * @author Snorre Davøen
  *
  */
-public class TwitterStream extends SwingWorker<Void, String> {
+public class TwitterStream {
 	
 	private BlockingQueue<String> messageQueue;
 	private BlockingQueue<Event> eventQueue;
@@ -43,11 +47,8 @@ public class TwitterStream extends SwingWorker<Void, String> {
 	private Authentication hosebirdAuth;
 	private ClientBuilder clientBuilder;
 	
-	private TweetConsumer consumer;
-	
-	public TwitterStream(TweetConsumer consumer) {
-		
-		this.consumer = consumer;
+	public TwitterStream() {
+
 		this.messageQueue = new LinkedBlockingQueue<String>(1000);
 		
 		// Fetch authentication properties and store them in string variables
@@ -89,34 +90,101 @@ public class TwitterStream extends SwingWorker<Void, String> {
 			.processor(new StringDelimitedProcessor(messageQueue))
 			.eventMessageQueue(eventQueue);
 	}
-
-	@Override
-	protected Void doInBackground() throws Exception {
-		// Build a new hosebird client and connect
-		hosebirdClient = clientBuilder.build();
-		hosebirdClient.connect();
+	
+	public static void main(String[] args) {
+		TwitterStream stream = new TwitterStream();
+		stream.connect();
 		
-		// While there are still more tweets in this stream
-		while(!hosebirdClient.isDone()) {
-			String tweet;
+		while(true) {
 			try {
-				// Consume tweet (if any left else catch interrupted exception)
-				tweet = messageQueue.take();
-				System.out.println("Publish tweet");
-				publish(tweet);
-			} catch (InterruptedException e) {
-				// No elements in message queue or interrupted by gui
-				System.out.println("Swing worker twitter stream interrupted");
-				hosebirdClient.stop();
+				Thread.sleep(20000);	
+			} catch(InterruptedException e) {
+				e.printStackTrace();
 			}
+			
+			ArrayList<String> tweets = new ArrayList<>();
+			tweets.addAll(stream.getAllTweets());
+			System.out.println(tweets);
 		}
-		return null;
 	}
 	
-	@Override
-	protected void process(List<String> tweets) {
-		// Call the consumeTweets method in the consumer (controller)
-		System.out.println("Process tweets " + tweets);
-		consumer.consumeTweets(tweets);
+	public void connect() {
+		hosebirdClient = clientBuilder.build();
+		hosebirdClient.connect();
 	}
+	
+	public void disconnect() {
+		hosebirdClient.stop();
+		hosebirdClient = null;
+	}
+	
+	public List<String> getTweets(int number) throws TwitterConnectionException {
+		
+		if(hosebirdClient.isDone()) throw new TwitterConnectionException();
+		
+		LinkedList<String> tweets;
+		
+		if(number > -1) {
+			tweets = getNTweets(number);
+		} else {
+			tweets = getAllTweets();
+		}
+		
+		return tweets;
+	}
+	
+	private LinkedList<String> getAllTweets() {
+		LinkedList<String> tweets = new LinkedList<>();
+		while(messageQueue.peek() != null) {
+			try {
+				tweets.add(messageQueue.take());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		return tweets;
+	}
+
+	private LinkedList<String> getNTweets(int number) {
+		
+		LinkedList<String> tweets = new LinkedList<>();
+		for (int i = 0; i < number; i++) {
+			try {
+				tweets.add(messageQueue.take());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		return tweets;
+	}
+
+//	@Override
+//	public void run() {
+//		// Build a new hosebird client and connect
+//		hosebirdClient = clientBuilder.build();
+//		hosebirdClient.connect();
+//		
+//		// While there are still more tweets in this stream
+//		while(!hosebirdClient.isDone()) {
+//			String tweet;
+//			try {
+//				// Consume tweet (if any left else catch interrupted exception)
+//				tweet = messageQueue.take();
+//				System.out.println("Publish tweet");
+//				publish(tweet);
+//			} catch (InterruptedException e) {
+//				// No elements in message queue or interrupted by gui
+//				System.out.println("Swing worker twitter stream interrupted");
+//				hosebirdClient.stop();
+//			}
+//		}
+//		return null;
+//	}
+	
+//	@Override
+//	protected void process(List<String> tweets) {
+//		// Call the consumeTweets method in the consumer (controller)
+//		System.out.println("Process tweets " + tweets);
+//		consumer.consumeTweets(tweets);
+//	}
 }
