@@ -41,23 +41,15 @@ public class TweetAreaController implements TweetConsumer {
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see controllers.TweetConsumer#startTwitterStream()
-	 */
+	@Override
 	public void startTwitterStream() {
 		// TODO Auto-generated method stub
-		System.out.println("Execute stream!");
-		stream.execute();
-
+		
 	}
 
-	/* (non-Javadoc)
-	 * @see controllers.TweetConsumer#stopTwitterStream()
-	 */
+	@Override
 	public void stopTwitterStream() {
 		// TODO Auto-generated method stub
-		stream.cancel(true);
-
+		
 	}
-
 }
