@@ -17,14 +17,37 @@ De som får ikke godkjent - ? (Ny endelig frist til å rette?)
 
 Leveringsformatet er et Eclipseprosjekt, eksportert til en komprimert fil. (zip eller tar.gz?)
 
-\section{Obligen}
-Dette prosjektet omhandler et system for nedlasting av tweets, dvs. meldinger fra Twitter. Dere skal først definere datatyper som behøvs. td. TwitterMelding, TwitterBruker, osv.
-Du må også definere enhetstester (JUnit) for klassene dine, for alle relevante metoder. Husk equals og evt. compareTo dersom du skal sortere.
-Det er en god ide å sjekke eksempler som ligger i prosjektet.
+\section{Oppgaven}
 
-Dere står selvsagt fritt til å implementere flere metoder, hjelpemetoder, klasser osv.
-Vi legger oss heller ikke opp i hvordan dere velger å implementere klassene.
-De eneste kravene er at:
+Obligatorisk Oppgave 1 omhandler et system for prosessering av Tweets (dvs. Twitter-meldinger) og Twitter-brukere fra en Twitter-strøm lokalisert til Sør-Norge. I oppgaven skal dere først definere datatyper som behøves, for eksempel TwitterMelding, TwitterBruker osv. Dere må også definere enhetstester (JUnit) for klassene og de operasjonene (metodene) de skal tilby. Dersom det er behov for sortering eller likhetssjekker for objektene av en datatype må dere huske compareTo og equals-metodene.
+
+
+I forbindelse med den obligatoriske oppgaven vil dere få utdelt et delvis implementert prosjekt som består av tre deler:
+\begin{itemize}
+  \item En klasse TwitterStream som håndterer kommunikasjon med Twitter-strømmen og lar en hente ut Tweets.
+  \item En rekke Java Interface som fungerer som kravspesifikasjon for de datatypene og operasjonene som skal implementeres.
+  \item Eksempler (demo-pakken) som viser hvordan man bruker Jackson json-parseren, Apache commons lang for tekstbehandling og hvordan man kan bruke TwitterStream-klassen for å hente ut Tweets fra twitter-strømmen.
+\end{itemize}
+
+\subsection{Twitter-strømmen}
+TwitterStream-klassen implementerer en enkel Singleton-klasse for å kommunisere med Twitter-strømmen. Bruken av denne klassen er illustrert i demo-pakken i Java-prosjektet. Klassen har fire metoder. En statisk metode instance() for å hente en instans av klassen (påkaller konstruktøren), tre instans-metoder hhv. connect() for å koble til strømmen, disconnect() for å koble fra, og getTweets(int number) for å hente ut Twitter-meldinger.
+
+Det er nødvendig å spesifisere en twitterauth.properties-fil med autentiseringsdata i config-pakke for å få koblet seg på Twitter-strømmen. For å få tak i autentiseringsdata må dere logge på med en Twitter-konto på https://dev.twitter.com. Gå deretter til My Applications-linken under profilbildet og velg Create new Application og fyll ut info. Etter at du har opprettet applikasjonen kan du trykke på Create access token-knappen for å generere access token-nøkler. Disse tilsvarer token og secret-verdiene i twitterauth.properties-filen.
+
+Hvis dere opplever problemer med autentisering av applikasjonen kan dere få hjelp av studentassistentene.
+
+\section{Tips og triks}
+Tweetene dere får er i \href{http://www.json.org/}{JSON-formatet}, og dere må selv hente data ut fra disse dataene.
+For å hjelpe dere med dette har vi lagt ved Jackson, et bibliotek for å behandle JSON-data.
+
+Vi har også med en demonstrasjon av bruken av dette biblioteket i prosjektet.
+Dersom dere lurer på hvordan en skal lese inn data fra JSON, så er demoen i aller høyeste grad relevant.
+
+StackOverflow og Java sine API sider er ellers særdeles nyttige.
+Til slutt foreslår vi at dere kommer på gruppene og spør spørsmål på ting dere sitter fast på.
+
+\subsection{Kravspesifikasjon}
+Interfacene spesifiserer et minimumskrav til hvilke datatyper og operasjoner som må være tilgjengelige. Dere står selvsagt fritt til å implementere flere metoder, hjelpermetoder, klasser osv. Hvordan dere implementerer klassene er opp til dere. De eneste kravene som stilles er at:
 \begin{enumerate}
 \item Dere har en GUI som er oversiktlig og brukendes
 \item Alle metodene som er spesifisert er korrekt.
@@ -33,13 +56,12 @@ De eneste kravene er at:
 \item At koden er korrekt.
 \end{enumerate}
 
-På de neste sidene følger en oversikt over klassene og metodene som skal være med.
-Det følger med Interfacer i java som er mer utfyllende dokumentert der. Alle metodene skal være med.
+På de neste sidene følger en oversikt over interfacene som er lagt ved i kravspesifikasjon-pakken.
 
 
 \newpage
 
-\subsection{TwitterMelding}
+\subsubsection{TwitterMelding}
 \label{subsec:TwitterMelding}
 
 \begin{description}
@@ -89,7 +111,7 @@ Det følger med Interfacer i java som er mer utfyllende dokumentert der. Alle me
   Rekkefølgen spiller ingen rolle.
 \end{description}
 \newpage
-\subsection{TwitterBruker}
+\subsubsection{TwitterBruker}
 \label{subsec:TwitterBruker}
 \begin{description}
 \item [getNavn():String] \ \\
@@ -114,7 +136,7 @@ Det følger med Interfacer i java som er mer utfyllende dokumentert der. Alle me
   Setter antall friends denne brukeren har
 \end{description}
 \newpage
-\subsection{TwitterBrukerCollection}
+\subsubsection{TwitterBrukerCollection}
 \label{subsec:TwitterBrukerCollection}
 
 \begin{description}
@@ -148,14 +170,4 @@ Det følger med Interfacer i java som er mer utfyllende dokumentert der. Alle me
 %    samling.add(tt);
 %  }
 %}
-\section{Tips og triks}
-\subsection{gson biblioteket}
-Tweetene dere får er i \href{http://www.json.org/}{JSON-formatet}, og dere må selv hente data ut fra disse dataene.
-For å hjelpe dere med dette har vi lagt ved Jackson, et bibliotek for å behandle JSON-data.
-
-Vi har også med en demonstrasjon av bruken av dette biblioteket i prosjektet.
-Dersom dere lurer på hvordan en skal lese inn data fra JSON, så er demoen i aller høyeste grad relevant.
-
-StackOverflow og Java sine API sider er ellers særdeles nyttige.
-Til slutt foreslår vi at dere kommer på gruppene og spør spørsmål på ting dere sitter fast på.
 \end{document}
