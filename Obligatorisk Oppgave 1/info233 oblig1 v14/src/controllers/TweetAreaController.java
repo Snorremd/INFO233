@@ -9,8 +9,6 @@ import java.util.List;
 
 import javax.swing.JTextArea;
 
-import views.AppView;
-
 /**
  * @author snorre
  *
@@ -22,8 +20,6 @@ public class TweetAreaController implements TweetConsumer {
 	TwitterStream stream;
 	
 	public TweetAreaController(AppController appController) {
-		this.appController = appController;
-		stream = new TwitterStream(this);
 	}
 
 	/* (non-Javadoc)

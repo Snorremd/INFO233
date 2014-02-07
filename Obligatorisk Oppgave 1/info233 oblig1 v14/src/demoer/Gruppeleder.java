@@ -24,7 +24,7 @@ public class Gruppeleder {
 
 	/**
 	 * Lager et nytt gruppelederobjekt basert på hva vi kan hente ut av en parser.
-	 * @param parser en Jackson-parser som kan parse java.
+	 * @param parser en Jackson-parser som kan parse JSON.
 	 * (jp står ikke for Jean-Phillipe, men for JSON Parser.)
 	 * @throws IOException dersom ugyldig json oppdages. 
 	 */
@@ -45,7 +45,7 @@ public class Gruppeleder {
 			jp.nextToken();
 			/* Så sjekker vi hva feltet i JSON-objektet heter.
 			   Dersom det er et av de feltene vi kjenner igjen og er interessert i,
-			   så henter vi ut verdien. Her kjenner vi kun til namn og powerlevel.
+			   så henter vi ut verdien. Her kjenner vi kun til namn, gebursdag og powerlevel.
 			   Vi gjør det på denne måten fordi rekkefølgen ting kommer inn på er ukjent. */
 			switch(jp.getCurrentName()){
 			case "namn":

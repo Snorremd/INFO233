@@ -24,6 +24,7 @@ public class TweetStroem {
 		TwitterStream stream = TwitterStream.instance();
 		stream.connect();
 		
+		// event-loop
 		while(true) {
 			// Sov tjue sekunder for å la køen til twitter-strømmen fylles litt opp
 			try {
@@ -40,6 +41,7 @@ public class TweetStroem {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			// Dere må selvsagt parse ut informasjonen.
 			System.out.println(tweets);
 		}
 	}
