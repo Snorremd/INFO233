@@ -34,7 +34,8 @@ import exceptions.TwitterConnectionException;
  * Tweets postet i Sør-Norge (filtrerer Twitter-strøm på
  * geo-lokasjon).
  * 
- * Klassen eksponerer en konstruktør uten parametere og ordner
+ * Klassen eksponerer en singleton-metode for å hente en instans
+ *  ved å kalle på konstruktør uten parametere, som ordner
  * all konfigurasjon av Twitter-strømmen på egenhånd. Klassen er
  * avhengig av at det ligger en twitterauth.properties fil med
  * korrekt autentiseringsdata i filen. Spør om hjelp hvis dere er
@@ -131,28 +132,6 @@ public class TwitterStream {
 			stream = new TwitterStream();
 		}
 		return stream;
-	}
-	
-	/**
-	 * Denne main-metoden er ment som et eksempel på hvordan
-	 * man kan bruke TwitterStream-klassen.
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		TwitterStream stream = TwitterStream.instance();
-		stream.connect();
-		
-		while(true) {
-			try {
-				Thread.sleep(20000);	
-			} catch(InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-			ArrayList<String> tweets = new ArrayList<>();
-			tweets.addAll(stream.getAllTweets());
-			System.out.println(tweets);
-		}
 	}
 	
 	/**
