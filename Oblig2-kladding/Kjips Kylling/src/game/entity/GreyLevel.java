@@ -1,11 +1,10 @@
 package game.entity;
 
+import game.entity.types.Level;
+import game.entity.types.Tile;
+
 import java.awt.Color;
 import java.awt.Graphics;
-
-import game.entity.types.Entity;
-import game.entity.types.Level;
-import game.util.Direction;
 
 public class GreyLevel implements Level {
 	int width, height, tilesize;
@@ -30,18 +29,18 @@ public class GreyLevel implements Level {
 	}
 
 	@Override
-	public boolean move(Entity who, Direction where) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
 	public boolean walkable(int column, int row) {
 		return checkLevelBounds(column, row);
 	}
 	
 	protected boolean checkLevelBounds(int column, int row){
 		return !(column < 0 || column > width - 1 || row < 0 || row > height - 1);
+	}
+
+	@Override
+	public Tile tileAt(int column, int row) {
+		// greylevel har ikke noen tiles, så den returnerer null
+		return null;
 	}
 
 }

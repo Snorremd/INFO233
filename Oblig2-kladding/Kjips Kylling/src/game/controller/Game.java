@@ -2,6 +2,8 @@ package game.controller;
 
 import game.entity.GreyLevel;
 import game.entity.SimplePlayer;
+import game.entity.TileFactory;
+import game.entity.TileLevel;
 import game.entity.types.Level;
 import game.entity.types.Player;
 import game.gfx.Lerret;
@@ -12,6 +14,9 @@ import game.util.Direction;
 import game.util.PaintingThread;
 
 import java.io.File;
+import java.io.FileReader;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 public class Game {
 
@@ -40,12 +45,14 @@ public class Game {
 	}
 	
 	public void move(Direction where){
-		System.out.println("GOT NEW KEYPRESS");
 		player.move(where, level);
 		level.tick();
 	}
 
 	public static void main(String[] args) throws Exception {
+		SpriteLoader tileSprites = new SpriteLoader(new File ("art/tiles.png"), 64);
+		TileFactory tf = new TileFactory(tileSprites);
+		TileLevel.load(tf, new File("res/level/simplegrey.level"));
 		SpriteLoader playersprites = new SpriteLoader(new File("art/figur.png"), 64);
 		Player p = new SimplePlayer(playersprites);
 		Level l = new GreyLevel(10,10,64);

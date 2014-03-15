@@ -70,9 +70,7 @@ public class SimplePlayer implements Player {
 			}
 			break;
 		case SOUTH:
-			System.out.println("Trying to go south");
 			boolean walkable = l.walkable(xTile, yTile + 1);
-			System.out.printf("(%d,%d) is%s walkable%n", xTile, yTile + 1, walkable? "" : " not");
 			if(walkable){
 				yTile += 1;
 			}
@@ -90,6 +88,17 @@ public class SimplePlayer implements Player {
 	@Override
 	public void setDirection(Direction dir) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public int getRow() {
+		return yTile;
+	}
+
+	@Override
+	public int getColumn() {
+		// TODO Auto-generated method stub
+		return xTile;
 	}
 
 }
