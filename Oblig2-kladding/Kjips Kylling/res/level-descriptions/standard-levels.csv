@@ -1,0 +1,2 @@
+Name,Walkable,Pushable,Lethal,Sprite-Column,Sprite-Row
+greytile-static,true,false,false,2,0
