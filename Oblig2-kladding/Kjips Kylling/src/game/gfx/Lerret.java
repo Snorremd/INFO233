@@ -3,6 +3,7 @@ package game.gfx;
 import game.entity.types.Level;
 import game.entity.types.Player;
 import game.input.SimpleKeyboard;
+import game.view.GameWindow;
 
 import java.awt.Canvas;
 import java.awt.Dimension;
@@ -19,15 +20,15 @@ public class Lerret extends Canvas{
 	private static final long serialVersionUID = -8579638927397401101L;
 	
 	protected final int TILESIZE;
-	protected JFrame vindu;
+	protected GameWindow vindu;
 	protected Level brett;
 	protected Player spiller;
 	protected Dimension størrelseIPiksler;
 	
-	public Lerret(String tittel, Dimension størrelseIPiksler, int tilesize, Level level, Player player){
-		TILESIZE = tilesize;
-		vindu = new JFrame(tittel);
-		this.størrelseIPiksler = størrelseIPiksler;
+	public Lerret(String tittel, Level level, Player player){
+		TILESIZE = level.tilesize();
+		vindu = new GameWindow(tittel);
+		this.størrelseIPiksler = new Dimension(level.tileColumns() * TILESIZE, level.tileRows() * TILESIZE);
 		brett = level;
 		spiller = player;
 		
@@ -61,15 +62,20 @@ public class Lerret extends Canvas{
 //		RENDER HERE
 		g.fillRect(0, 0, størrelseIPiksler.width, størrelseIPiksler.height);
 		
-		brett.render(g);
-		spiller.render(g);
+		if(null != brett){
+			brett.render(g);
+		}
+		if(null != spiller){
+			spiller.render(g);
+		}
+		
 //		END RENDER
 		g.dispose();
 		bs.show();
 		
 	}
 	
-	public JFrame getContainingFrame(){
+	public GameWindow getWindow(){
 		return vindu;
 	}
 

@@ -82,12 +82,12 @@ public class SimplePlayer implements Player {
 
 	@Override
 	public void setPosition(int column, int row) {
-		// TODO Auto-generated method stub
+		this.xTile = column; this.yTile = row;
 	}
 
 	@Override
 	public void setDirection(Direction dir) {
-		// TODO Auto-generated method stub
+		this.faces = dir;
 	}
 
 	@Override
@@ -97,7 +97,6 @@ public class SimplePlayer implements Player {
 
 	@Override
 	public int getColumn() {
-		// TODO Auto-generated method stub
 		return xTile;
 	}
 

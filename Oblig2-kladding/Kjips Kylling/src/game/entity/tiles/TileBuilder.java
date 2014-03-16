@@ -1,11 +1,10 @@
 package game.entity.tiles;
 
 import game.gfx.SpriteLoader;
-import game.util.Direction;
 
 
 public class TileBuilder {
-	int row, col, spriteX, spriteY, tilesize;
+	int row, col, spriteX, spriteY;
 	SpriteLoader spriteloader;
 	boolean walkable, pushable, lethal;
 
@@ -54,12 +53,7 @@ public class TileBuilder {
 		return this;
 	}
 
-	public TileBuilder tilesize(int tilesize){
-		this.tilesize = tilesize;
-		return this;
-	}
-	
 	public StaticTile create() throws IllegalTileException{
-		return new StaticTile(row, col, tilesize, spriteloader, spriteX, spriteY, walkable, pushable, lethal);
+		return new StaticTile(row, col, spriteloader, spriteX, spriteY, walkable, pushable, lethal);
 	}
 }

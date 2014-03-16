@@ -29,14 +29,13 @@ public class StaticTile implements Tile{
 	 * @param lethal om du dør om du tar i den. (Tenk lava, syrebad, etc.)
 	 * @throws IllegalTileException om en tile er walkable og pushable
 	 */
-	public StaticTile(int row, int col, int tilesize, SpriteLoader spriteloader, int spriteX, int spriteY, boolean walkable, boolean pushable, boolean lethal) throws IllegalTileException{
+	public StaticTile(int row, int col, SpriteLoader spriteloader, int spriteX, int spriteY, boolean walkable, boolean pushable, boolean lethal) throws IllegalTileException{
 		if(walkable && pushable){
 			throw new IllegalTileException("A Tile cannot be walkable and pushable");
 		}
 		
 		this.row = row;
 		this.col = col;
-		this.tilesize = tilesize;
 		this.sl = spriteloader;
 		this.spriteX = spriteX;
 		this.spriteY = spriteY;
@@ -48,7 +47,7 @@ public class StaticTile implements Tile{
 	
 	@Override
 	public void render(Graphics gfx) {
-		gfx.drawImage(sl.getImage(spriteX, spriteY), col*tilesize, row*tilesize, null);
+		gfx.drawImage(sl.getImage(spriteX, spriteY), col*sl.tilesize(), row*sl.tilesize(), null);
 	}
 
 	@Override
@@ -101,7 +100,7 @@ public class StaticTile implements Tile{
 				getColumn(), getRow(),
 				walkable? "walkable" : "not walkable",
 				pushable? "pushable" : "not pushable",
-				lethal? "lethal" : "not lethal");
+				lethal?   "lethal"   : "not lethal");
 	}
 
 }

@@ -43,4 +43,31 @@ public class GreyLevel implements Level {
 		return null;
 	}
 
+	@Override
+	public int tileRows() {
+		return height;
+	}
+
+	@Override
+	public int tileColumns() {
+		return width;
+	}
+
+	@Override
+	public int tilesize() {
+		return tilesize;
+	}
+
+	@Override
+	public int getStartingColumn() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getStartingRow() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

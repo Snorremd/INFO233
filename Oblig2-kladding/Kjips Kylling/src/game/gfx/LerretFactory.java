@@ -1,10 +1,7 @@
 package game.gfx;
 
-import static game.util.EffectiveJavaHasher.hashInteger;
 import game.entity.types.Level;
 import game.entity.types.Player;
-
-import java.awt.Dimension;
 
 /**
  * Dette er en klasse for å lett kunne lage objekter av Lerret-klassen.
@@ -30,7 +27,6 @@ import java.awt.Dimension;
  *
  */
 public class LerretFactory extends java.lang.Object implements java.lang.Cloneable{
-	protected int tilesize, horizontalTiles, verticalTiles;
 	protected String title;
 	protected Level level;
 	protected Player player;
@@ -41,41 +37,9 @@ public class LerretFactory extends java.lang.Object implements java.lang.Cloneab
 	 * og setter title til "NOTITLE"
 	 */
 	public LerretFactory(){
-		tilesize = horizontalTiles = verticalTiles = 0;
 		title = "NOTITLE";
 	}
 	
-	/**
-	 * Lar deg sette en int som tilesize
-	 * @param tilesize er hvor mange piksler som er i en tile. En tile er kvadratisk, så 64 betyr at den er 64×64 piksler stor.
-	 * @return denne fabrikken, slik at du kan kjede sammen kall.
-	 */
-	public LerretFactory tilesize(int tilesize){
-		this.tilesize = tilesize;
-		return this;
-	}
-	
-	/**
-	 * Lar det sette en int som angir størrelsen (i antall tiles) horizontalt lerretet skal være på
-	 * @param horizontal er altså antall tiles. Størrelsen på lerretet blir da horizontalTiles × tilesize + litt til til vinduet.
-	 * @return denne fabrikken, slik at du kan kjede sammen kall.
-	 * 
-	 */
-	public LerretFactory horizontalTiles(int horizontal){
-		this.horizontalTiles = horizontal;
-		return this;
-	}
-	
-	/**
-	 * Lar det sette en int som angir størrelsen (i antall tiles) vertikalt lerretet skal være på
-	 * @param horizontal er altså antall tiles. Størrelsen på lerretet blir da verticalTiles × tilesize + litt til til vinduet.
-	 * @return denne fabrikken, slik at du kan kjede sammen kall.
-	 * 
-	 */
-	public LerretFactory verticalTiles(int vertical){
-		this.verticalTiles = vertical;
-		return this;
-	}
 	
 	/**
 	 * Lar deg sette tittelen på vinduet. Det er ikke noen mulighet til å sette ikonet.
@@ -116,28 +80,21 @@ public class LerretFactory extends java.lang.Object implements java.lang.Cloneab
 	 */
 	public Lerret create(){
 		if(null == player ||
-		   null == level || 
-		   0 >= tilesize ||
-		   0 >= verticalTiles || 
-		   0 >= horizontalTiles){
+		   null == level){
 			return null;
 		}
 		return new Lerret(title,
-				          new Dimension(horizontalTiles * tilesize, verticalTiles * tilesize),
-				          tilesize,
 				          level,
 				          player);
 	}
 	
 	@Override
 	public int hashCode(){
-		/* denne metoden er tatt rett ut av <i>Effective Java</i>, side 47. */
+		/* denne metoden er tatt rett ut av Effective Java, side 47. */
 		
 		int result = 17;
-		
-		result = 31 * result + hashInteger(horizontalTiles);
-		result = 31 * result + hashInteger(verticalTiles);
-		result = 31 * result + hashInteger(tilesize);
+		result = 31 * result + player.hashCode(); 
+		result = 31 * result + level.hashCode();
 		result = 31 * result + title.hashCode();
 		
 		return result;
@@ -159,9 +116,7 @@ public class LerretFactory extends java.lang.Object implements java.lang.Cloneab
 		if(obj instanceof LerretFactory){
 			LerretFactory lf = (LerretFactory) obj;
 			return lf.title.equals(this.title) &&
-				   lf.horizontalTiles == this.horizontalTiles &&
-				   lf.verticalTiles == this.verticalTiles &&
-				   lf.tilesize == this.tilesize;
+				   lf.level.equals(this.level);
 		}
 		
 		return false;
@@ -170,11 +125,8 @@ public class LerretFactory extends java.lang.Object implements java.lang.Cloneab
 	@Override
 	public String toString(){
 		return String.format("LerretFactory<title: %s, horizontalTiles: %d, verticalTiles %s, tilesize %d>",
-							 title,
-							 horizontalTiles,
-							 verticalTiles,
-							 tilesize);
-	}
+							 title);
+		}
 	
 	/*
 	 * Cloning per cloneable er sært.
@@ -203,10 +155,10 @@ public class LerretFactory extends java.lang.Object implements java.lang.Cloneab
 	/* Vanligvis har en konstruktørene sammen, dette er et unntak. */
 	public LerretFactory(LerretFactory toClone){
 		title = toClone.title;
-		tilesize = toClone.tilesize;
-		horizontalTiles = toClone.horizontalTiles;
-		verticalTiles = toClone.verticalTiles;
+		player = toClone.player;
+		level = toClone.level;
 	}
+	
 	/* 
 	 * Merk at vi her bare kopierer rett over, men det vil IKKE være en god ide i det generelle tilfellet.
 	 * Sett at vi har en klasse ArrayFoo som har et array i seg slik:
