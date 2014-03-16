@@ -14,9 +14,6 @@ import game.util.Direction;
 import game.util.PaintingThread;
 
 import java.io.File;
-import java.io.FileReader;
-
-import au.com.bytecode.opencsv.CSVReader;
 
 public class Game {
 
@@ -50,12 +47,17 @@ public class Game {
 	}
 
 	public static void main(String[] args) throws Exception {
+		/* TODO: Disse tingene skal ut av main-metoden og inn i en egen ting etter hvert som
+		 * det blir mer klart hvordan spiller bør startes. */
 		SpriteLoader tileSprites = new SpriteLoader(new File ("art/tiles.png"), 64);
+		
 		TileFactory tf = new TileFactory(tileSprites);
-		TileLevel.load(tf, new File("res/level/simplegrey.level"));
+		tf.registerTiles(new File("res/level-descriptions/standard-levels.csv"));
+		tf.registerAliases(new File("res/aliases/standard.alias"));
+		
 		SpriteLoader playersprites = new SpriteLoader(new File("art/figur.png"), 64);
 		Player p = new SimplePlayer(playersprites);
-		Level l = new GreyLevel(10,10,64);
+		Level l = TileLevel.load(tf, new File("res/level/simplegrey.level")); // new GreyLevel(10,10,64);
 		Game g = new Game(10,10,64, p, l);
 	}
 }

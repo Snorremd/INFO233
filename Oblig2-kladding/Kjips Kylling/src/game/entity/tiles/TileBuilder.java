@@ -5,8 +5,7 @@ import game.util.Direction;
 
 
 public class TileBuilder {
-	int row, col, spriteX, spriteY;
-	Direction direction;
+	int row, col, spriteX, spriteY, tilesize;
 	SpriteLoader spriteloader;
 	boolean walkable, pushable, lethal;
 
@@ -34,12 +33,7 @@ public class TileBuilder {
 		this.lethal = lethal;
 		return this;
 	}
-
-	public TileBuilder direction(Direction direction){
-		this.direction = direction;
-		return this;
-	}
-
+	
 	public TileBuilder row(int row){
 		this.row = row;
 		return this;
@@ -60,7 +54,12 @@ public class TileBuilder {
 		return this;
 	}
 
+	public TileBuilder tilesize(int tilesize){
+		this.tilesize = tilesize;
+		return this;
+	}
+	
 	public StaticTile create() throws IllegalTileException{
-		return new StaticTile(row, col, direction, spriteloader, spriteX, spriteY, walkable, pushable, lethal);
+		return new StaticTile(row, col, tilesize, spriteloader, spriteX, spriteY, walkable, pushable, lethal);
 	}
 }

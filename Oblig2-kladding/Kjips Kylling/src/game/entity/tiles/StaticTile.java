@@ -9,7 +9,7 @@ import game.util.Direction;
 import game.util.Mover;
 
 public class StaticTile implements Tile{
-	protected int row, col;
+	protected int row, col, tilesize;
 	protected Direction dir;
 	protected SpriteLoader sl;
 	protected int spriteX, spriteY;
@@ -20,7 +20,7 @@ public class StaticTile implements Tile{
 	 * Mye enklere å holde orden på ting med.
 	 * @param row raden på brettet flisen skal være på
 	 * @param col kolonnen på brettet flisen skal være på
-	 * @param direction retningen den skal se. SOUTH er alltid er en fin standard om du ikke vet bedre. Evt. ansikter ser mot spilleren da.
+	 * @param tilesize størrelsen på flisen
 	 * @param spriteloader hvor den skal få fatt på spriten sin fra.
 	 * @param spriteX hvilken rad i arket spriten sitter på
 	 * @param spriteY hvilken kolonne i arket spriten sitter på
@@ -29,14 +29,14 @@ public class StaticTile implements Tile{
 	 * @param lethal om du dør om du tar i den. (Tenk lava, syrebad, etc.)
 	 * @throws IllegalTileException om en tile er walkable og pushable
 	 */
-	public StaticTile(int row, int col, Direction direction, SpriteLoader spriteloader, int spriteX, int spriteY, boolean walkable, boolean pushable, boolean lethal) throws IllegalTileException{
+	public StaticTile(int row, int col, int tilesize, SpriteLoader spriteloader, int spriteX, int spriteY, boolean walkable, boolean pushable, boolean lethal) throws IllegalTileException{
 		if(walkable && pushable){
 			throw new IllegalTileException("A Tile cannot be walkable and pushable");
 		}
 		
 		this.row = row;
 		this.col = col;
-		this.dir = direction;
+		this.tilesize = tilesize;
 		this.sl = spriteloader;
 		this.spriteX = spriteX;
 		this.spriteY = spriteY;
@@ -48,7 +48,7 @@ public class StaticTile implements Tile{
 	
 	@Override
 	public void render(Graphics gfx) {
-		gfx.drawImage(sl.getImage(spriteX, spriteY), col, row, null);
+		gfx.drawImage(sl.getImage(spriteX, spriteY), col*tilesize, row*tilesize, null);
 	}
 
 	@Override
@@ -94,6 +94,14 @@ public class StaticTile implements Tile{
 	@Override
 	public boolean isPushable() {
 		return pushable;
+	}
+	
+	public String toString(){
+		return String.format("Static tile at (%d,%d), %s, %s, %s",
+				getColumn(), getRow(),
+				walkable? "walkable" : "not walkable",
+				pushable? "pushable" : "not pushable",
+				lethal? "lethal" : "not lethal");
 	}
 
 }
