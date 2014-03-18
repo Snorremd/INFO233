@@ -1,0 +1,75 @@
+package game.entity;
+
+import game.entity.tiles.IllegalTileException;
+import game.entity.tiles.TileBuilder;
+import game.entity.types.Tile;
+import game.gfx.SpriteLoader;
+import game.util.Direction;
+
+import java.util.Map;
+import java.util.Set;
+
+public class TileFactory {
+	SpriteLoader sprites;
+	
+	Set<String> names;
+	Map<String, Boolean> walkable;
+	Map<String, Boolean> pushable;
+	Map<String, Boolean> lethal;
+	Map<String, Integer> column; // kolonne i spritesheet, ikke plassering
+	Map<String, Integer> row;    // også per spritesheet. 
+	Map<Character, String>  alias;
+	
+	public TileFactory(SpriteLoader sprites){
+		this.sprites = sprites;
+	}
+	
+	public boolean registerTile(String[] csv){
+		String  name     = csv[0];
+		if(names.contains(name)){
+			return false;
+		}
+		names.add(name);
+
+		this.walkable.put(name, Boolean.parseBoolean(csv[1]));
+		this.pushable.put(name, Boolean.parseBoolean(csv[2]));
+		this.lethal.put(name, Boolean.parseBoolean(csv[3]));
+		this.column.put(name, Integer.parseInt(csv[4]));
+		this.row.put(name, Integer.parseInt(csv[5]));
+		
+		return true;
+	}
+	
+	/**
+	 * Lager en ny (statisk) tile basert på data som er registrert.
+	 * @param name Navnet på tilen
+	 * @param x x-posisjonen til tilen (ikke piksler, men type rad/kolonner)
+	 * @param y y-posisjonen til tilen (ikke piksler, men type rad/kolonner)
+	 * @return en ny tile, satt til gitt posisjon.
+	 * @throws TileNotRegisteredException dersom ingen tile med det navnet er gitt.
+	 * @throws IllegalTileException dersom de registrerte dataene er ulovlige.
+	 */
+	public Tile make(String name, int x, int y) throws TileNotRegisteredException, IllegalTileException {
+		if(!names.contains(name)){
+			String error = String.format("Tile \"%s\" is not registered in database. Have you loaded all data correctly?", name);
+			throw new TileNotRegisteredException(error);
+		}
+		
+		/*
+		 *  Dette er forhåpentligvis litt letere å holde orden på
+		 *  Enn å måtte lese gjennom en lang ugjennomtrengelig  masse av et kall til new StaticTile
+		 */
+		
+		return new TileBuilder()
+		    .row(row.get(name))
+		    .col(column.get(name))
+		    .spriteX(row.get(name))
+		    .spriteY(column.get(name))
+		    .direction(Direction.SOUTH)
+		    .spriteloader(sprites)
+		    .walkable(walkable.get(name))
+		    .pushable(pushable.get(name))
+		    .lethal(lethal.get(name))
+		    .create();
+	}
+}

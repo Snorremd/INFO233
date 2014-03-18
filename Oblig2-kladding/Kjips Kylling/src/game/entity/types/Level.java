@@ -10,4 +10,6 @@ public interface Level extends Paintable, Tickable {
 	public int tilesize();
 	public int getStartingColumn();
 	public int getStartingRow();
+	public int getGoalColumn();
+	public int getGoalRow();
 }

@@ -6,6 +6,12 @@ import game.entity.types.Tile;
 import java.awt.Color;
 import java.awt.Graphics;
 
+/**
+ * Dette er bare en enkel minste-mulig-arbeid klasse som implementerer et level-interface og lar deg gå rundt på en grå slette.
+ * Skal ikke brukes til noe... ;)
+ * @author Haakon Løtveit (haakon.lotveit@student.uib.no)
+ *
+ */
 public class GreyLevel implements Level {
 	int width, height, tilesize;
 	
@@ -60,14 +66,23 @@ public class GreyLevel implements Level {
 
 	@Override
 	public int getStartingColumn() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int getStartingRow() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public int getGoalColumn() {
+		return -1;
+	}
+
+	@Override
+	public int getGoalRow() {
+		return -1;
+	}
+
 
 }

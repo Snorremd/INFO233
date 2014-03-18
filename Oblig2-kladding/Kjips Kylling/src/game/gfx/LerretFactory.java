@@ -2,6 +2,7 @@ package game.gfx;
 
 import game.entity.types.Level;
 import game.entity.types.Player;
+import game.input.SimpleKeyboard;
 
 /**
  * Dette er en klasse for å lett kunne lage objekter av Lerret-klassen.
@@ -27,28 +28,17 @@ import game.entity.types.Player;
  *
  */
 public class LerretFactory extends java.lang.Object implements java.lang.Cloneable{
-	protected String title;
 	protected Level level;
 	protected Player player;
+	protected SimpleKeyboard keyboard;
 	
 	/**
 	 * En enkel konstruktør.
-	 * Den setter tilesize, horizontalTiles og verticalTiles til 0,
-	 * og setter title til "NOTITLE"
 	 */
 	public LerretFactory(){
-		title = "NOTITLE";
-	}
-	
-	
-	/**
-	 * Lar deg sette tittelen på vinduet. Det er ikke noen mulighet til å sette ikonet.
-	 * @param title En streng som blir tittelen på vinduet når du ber om lerretet.
-	 * @return denne fabrikken, slik at du kan kjede sammen kall.
-	 */
-	public LerretFactory title(String title){
-		this.title = title;
-		return this;
+		level = null;
+		player = null;
+		keyboard = null;
 	}
 	
 	/**
@@ -72,6 +62,16 @@ public class LerretFactory extends java.lang.Object implements java.lang.Cloneab
 	}
 	
 	/**
+	 * Lar deg sette tastaturet som tar seg av trykkingen og slikt.
+	 * @param keyboard tastaturlytteren som skal brukes.
+	 * @return denne fabrikken, slik at du kan kjede sammen kall.
+	 */
+	public LerretFactory keyboard(SimpleKeyboard keyboard){
+		this.keyboard = keyboard;
+		return this;
+	}
+	
+	/**
 	 * Det er her det store skjer.
 	 * Basert på hvilke verdier du har kalt, blir et nytt Lerret objekt returnert her.
 	 * Dersom du kaller create() to ganger for du to lerret med de samme argumentene. Du får *ikke* det samme objektet to ganger, men to nye.
@@ -80,22 +80,22 @@ public class LerretFactory extends java.lang.Object implements java.lang.Cloneab
 	 */
 	public Lerret create(){
 		if(null == player ||
-		   null == level){
+		   null == level ||
+		   null == keyboard){
 			return null;
 		}
-		return new Lerret(title,
-				          level,
-				          player);
+		return new Lerret(level,
+				          player,
+				          keyboard);
 	}
+	
 	
 	@Override
 	public int hashCode(){
 		/* denne metoden er tatt rett ut av Effective Java, side 47. */
 		
 		int result = 17;
-		result = 31 * result + player.hashCode(); 
 		result = 31 * result + level.hashCode();
-		result = 31 * result + title.hashCode();
 		
 		return result;
 	}
@@ -115,8 +115,7 @@ public class LerretFactory extends java.lang.Object implements java.lang.Cloneab
 	public boolean equals(Object obj){
 		if(obj instanceof LerretFactory){
 			LerretFactory lf = (LerretFactory) obj;
-			return lf.title.equals(this.title) &&
-				   lf.level.equals(this.level);
+			return lf.level.equals(this.level);
 		}
 		
 		return false;
@@ -124,9 +123,10 @@ public class LerretFactory extends java.lang.Object implements java.lang.Cloneab
 	
 	@Override
 	public String toString(){
-		return String.format("LerretFactory<title: %s, horizontalTiles: %d, verticalTiles %s, tilesize %d>",
-							 title);
-		}
+		return String.format("LerretFactory<horizontalTiles: %d, verticalTiles %s, tilesize %d>",
+				null == level? 0 : level.tileColumns(),
+				null == level? 0 : level.tileRows());
+	}
 	
 	/*
 	 * Cloning per cloneable er sært.
@@ -154,9 +154,9 @@ public class LerretFactory extends java.lang.Object implements java.lang.Cloneab
 	}
 	/* Vanligvis har en konstruktørene sammen, dette er et unntak. */
 	public LerretFactory(LerretFactory toClone){
-		title = toClone.title;
 		player = toClone.player;
 		level = toClone.level;
+		keyboard = toClone.keyboard;
 	}
 	
 	/* 

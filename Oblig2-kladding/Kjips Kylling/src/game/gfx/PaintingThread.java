@@ -1,6 +1,5 @@
-package game.util;
+package game.gfx;
 
-import game.gfx.Lerret;
 
 public class PaintingThread extends Thread{
 	Lerret l;

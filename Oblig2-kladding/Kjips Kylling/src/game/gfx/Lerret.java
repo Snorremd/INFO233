@@ -20,14 +20,13 @@ public class Lerret extends Canvas{
 	private static final long serialVersionUID = -8579638927397401101L;
 	
 	protected final int TILESIZE;
-	protected GameWindow vindu;
 	protected Level brett;
 	protected Player spiller;
 	protected Dimension størrelseIPiksler;
+	protected PaintingThread painter;
 	
-	public Lerret(String tittel, Level level, Player player){
+	public Lerret(Level level, Player player, SimpleKeyboard keyboard){		
 		TILESIZE = level.tilesize();
-		vindu = new GameWindow(tittel);
 		this.størrelseIPiksler = new Dimension(level.tileColumns() * TILESIZE, level.tileRows() * TILESIZE);
 		brett = level;
 		spiller = player;
@@ -36,16 +35,17 @@ public class Lerret extends Canvas{
 		this.setMinimumSize(størrelseIPiksler);
 		this.setMaximumSize(størrelseIPiksler);
 		this.setFocusable(true);
-
-		vindu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		vindu.add(this);		
-		vindu.pack();
-		vindu.setVisible(true);
 		
+		this.registerKeyboard(keyboard);
 		this.requestFocusInWindow();
+		painter = new PaintingThread(this);
 		
 	}
-
+	
+	public void setLevel(Level level){
+		this.brett = level;
+	}
+	
 	public void tick(){
 		spiller.tick();
 		brett.tick();
@@ -75,10 +75,6 @@ public class Lerret extends Canvas{
 		
 	}
 	
-	public GameWindow getWindow(){
-		return vindu;
-	}
-
 	public void registerKeyboard(SimpleKeyboard keyboard) {
 		this.setFocusable(true);
 		this.addKeyListener(keyboard);

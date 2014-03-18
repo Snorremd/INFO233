@@ -1,0 +1,126 @@
+package game.util;
+
+import game.entity.AliasNotRegisteredException;
+import game.entity.TileFactory;
+import game.entity.TileLevel;
+import game.entity.TileNotRegisteredException;
+import game.entity.tiles.IllegalTileException;
+import game.gfx.SpriteLoader;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import au.com.bytecode.opencsv.CSVReader;
+
+public class ResourceLoaderCSV implements ResourceLoader{
+	protected Map<String, SpriteLoader> spriteLoaders;
+	protected Map<String, File> levelFiles;
+	protected Map<Integer, String> levelNames;
+	protected TileFactory factory;
+	
+	/**
+	 * Lager en ny ResourceLoader, basert på hardkodede stier.
+	 * Dette er ikke i tråd med moderne forståelse av sunn fornuft.
+	 * En del av oppgaven blir nok å sende dette over til en database.
+	 * @throws FileNotFoundException Om noen av filene ikke er der.
+	 * @throws IOException Om noe går galt under lesing (CSV-parsing eller lignende)
+	 * @throws TileNotRegisteredException om noen av aliasene refererer til fliser som ikke er registrerte på forhånd.
+	 */
+	public ResourceLoaderCSV() throws FileNotFoundException, IOException, TileNotRegisteredException{
+		/* Dette er ikke egentlig helt smart, men det virker for våre formål */
+		File adventure     = new File("res/adventure.csv");
+		File alias         = new File("res/alias.csv");
+		File spritesheets  = new File("res/spritesheets.csv");
+		File standardTiles = new File("res/standard-tiles.csv");
+		
+		spriteLoaders = new HashMap<>();
+		try(CSVReader rdr = new CSVReader(new FileReader(spritesheets), ',','"',1)){
+			for(String[] row : rdr.readAll()){
+				System.out.printf("[INFO] SpriteLoader(%s) \"%s\" loaded, with file \"%s\"%n", row[2], row[0], row[1]);
+				spriteLoaders.put(row[0], new SpriteLoader(new File(row[1]), Integer.parseInt(row[2])));
+			}
+		}
+		
+		levelFiles = new HashMap<>();
+		levelNames = new HashMap<>();
+		try(CSVReader rdr = new CSVReader(new FileReader(adventure), ',', '"', 1)){
+			for(String[] row : rdr.readAll()){
+				Integer number = Integer.parseInt(row[0]);
+				String levelName = row[1];
+				String levelPath = String.format("res/levels/%s", row[2]);
+				File levelFile = new File(levelPath);
+				
+				if(!levelFile.exists()){
+					throw new FileNotFoundException(String.format("File \"%s\" does not exist. Can't load levels", levelPath));
+				}
+				levelFiles.put(levelName, levelFile);
+				levelNames.put(number, levelName);
+				System.out.printf("[INFO] Registered level %d (%s) %s%n", number, levelName, levelPath);
+			}
+		}
+		
+		try {
+			factory = new TileFactory(this.getSpriteLoader("tiles"));
+		} catch (SpriteSheetNotFoundException e) {
+			throw new IOException("res/spritesheets.csv does not contain a definition for a spritesheet called \"tiles\".");
+		}
+		
+		factory.registerTiles(standardTiles);
+		factory.registerAliases(alias);
+	}
+	
+	@Override
+	public TileLevel getLevel(String name) throws LevelNotFoundException, TileNotRegisteredException, IllegalTileException, AliasNotRegisteredException {
+		if(!levelFiles.containsKey(name)){
+			throw new LevelNotFoundException(String.format("Level \"%s\" not found.%n", name));
+		}
+		
+		try {
+			return TileLevel.load(getTileFactory(), levelFiles.get(name));
+		} catch (FileNotFoundException e) {
+			throw new LevelNotFoundException(String.format("Levelfile \"%s\" does not exist, cannot load level", levelFiles.get(name).getAbsolutePath()));
+		}
+		
+	}
+
+	@Override
+	public TileLevel getLevel(int number) throws LevelNotFoundException, TileNotRegisteredException, IllegalTileException, AliasNotRegisteredException {
+		if(!levelNames.containsKey(number)){
+			throw new LevelNotFoundException(String.format("No level %d is registered%n", number));
+		}
+		try{
+			return this.getLevel(levelNames.get(number));
+		}
+		catch(LevelNotFoundException lnfe){
+			throw new LevelNotFoundException(
+					String.format("Level %d has a name (%s), but that name does not point to a level.",
+							number,
+							levelNames.get(number)),
+					lnfe);
+		}
+	}
+
+	@Override
+	public SpriteLoader getSpriteLoader(String name) throws SpriteSheetNotFoundException {
+		if(!spriteLoaders.containsKey(name)){
+			throw new SpriteSheetNotFoundException(String.format("No spritesheet with the name %s was found", name));
+		}
+		
+		return spriteLoaders.get(name);
+	}
+
+	@Override
+	public TileFactory getTileFactory() {
+		return factory;
+	}
+
+	@Override
+	public int getNumLevels() {
+		return levelFiles.size();
+	}
+
+}
