@@ -2,11 +2,16 @@ package game.entity;
 
 import game.entity.tiles.IllegalTileException;
 import game.entity.types.Level;
+import game.entity.types.Monster;
+import game.entity.types.Player;
 import game.entity.types.Tile;
+import game.gfx.SpriteLoader;
+import game.monster.ExampleMonster;
 
 import java.awt.Graphics;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class TileLevel implements Level {
@@ -61,7 +66,7 @@ public class TileLevel implements Level {
 	
 	int width, height, tilesize;
 	Tile[][] map; // map as in geography, not data structure.
-	// TODO: legg til andre aktører enn spilleren
+	Monster theMonster; /* TODO: en del av obligen er å legge til støtte for monstre. Hvordan dere gjør det er opp til dere. Kanskje en datastruktur som ble gjennomgått på forelesning? */
 	
 	public TileLevel(int width, int height, int tilesize, int startCol, int startRow, int goalCol, int goalRow, Tile[][] map){
 		this.startCol = startCol;
@@ -72,6 +77,38 @@ public class TileLevel implements Level {
 		this.height = height;
 		this.tilesize = tilesize;
 		this.map = map;
+		
+		/* 
+		 * TODO: Dette må selvsagt vekk og erstattes med en ordentlig måte å populere et kart med monstre på.
+		 * Hvordan dere velger å lagre hvor monstre er på et brett er selvsagt helt opp til dere. 
+		 */
+		putMonster();
+	}
+	
+	/* DETTE ER IKKE EN GOD PROSEDYRE. DETTE ER EN STYGG HACK FOR Å VISE ET ENKELT MONSTER. */
+	private void putMonster(){
+		for(int row = 0; row < height; ++row){
+			for(int col = 0; col < width; ++col){
+				if(col == startCol && row == startRow){
+					continue; /* Hopp over der spilleren starter. */
+				}
+				if(tileAt(col, row).isWalkable()){
+					try {
+						theMonster = new ExampleMonster(this, new SpriteLoader(new File("art/monstre.png"), 64), col, row);
+						System.out.printf("[HACK] Put a monster, at (%d,%d)%n", col, row);
+						return;
+					} catch (IOException e) {
+						/* Siden dere skal bytte dette ut med noe mer fornuftig, står dette her uten å gjøre noe fornuftig. */
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void registerMonster(Monster m){
+		this.theMonster = m;
 	}
 	
 	@Override
@@ -81,22 +118,27 @@ public class TileLevel implements Level {
 				t.render(gfx);
 			}
 		}
+		
+		/* TODO: Dette vil jo selvsagt ikke virke når du skal ha flere monstre. */
+		theMonster.render(gfx);
 	}
 
 	@Override
 	public void tick() {
-		// Når det kommer monstre skal de tickes her.
+		/* TODO: Du må selvsagt bytte dette ut med en måte å håndtere monstre på. */
+		theMonster.tick();
 	}
 
 	@Override
 	public boolean walkable(int column, int row) {
-		boolean canWalk = checkLevelBounds(column, row);
-		
-		if(!canWalk) return false;
-		
-		canWalk = map[column][row].isWalkable();
+		if(!(checkLevelBounds(column, row))){
+			return false;		
+		}
+		if(!(map[column][row].isWalkable())){
+			return false;
+		}
 
-		return canWalk;
+		return true;
 	}
 	
 	protected boolean checkLevelBounds(int column, int row){
@@ -105,8 +147,7 @@ public class TileLevel implements Level {
 
 	@Override
 	public Tile tileAt(int column, int row) {
-		// greylevel har ikke noen tiles, så den returnerer null
-		return null;
+		return checkLevelBounds(column, row)? map[column][row] : null;
 	}
 
 	@Override
@@ -116,6 +157,7 @@ public class TileLevel implements Level {
 
 	@Override
 	public int tileColumns() {
+		/* antagelsen her er at kartet er firkantet. Det er også antatt i loadFromFile-metoden. */
 		return map.length > 0? map[0].length : 0;
 	}
 
@@ -149,6 +191,13 @@ public class TileLevel implements Level {
 	@Override
 	public int getGoalRow() {
 		return goalRow;
+	}
+
+	@Override
+	public boolean isPlaceDeadly(int column, int row) {
+			return  (!checkLevelBounds(column, row) ||
+					 tileAt(column, row).isLethal() ||
+				 	 theMonster.getColumn() == column && theMonster.getRow() == row);
 	}
 
 }

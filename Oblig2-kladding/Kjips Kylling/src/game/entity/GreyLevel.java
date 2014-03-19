@@ -1,11 +1,14 @@
 package game.entity;
 
 import game.entity.types.Level;
+import game.entity.types.Monster;
+import game.entity.types.Player;
 import game.entity.types.Tile;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
+/* TODO: Fjern denne klassen før utlevering */
 /**
  * Dette er bare en enkel minste-mulig-arbeid klasse som implementerer et level-interface og lar deg gå rundt på en grå slette.
  * Skal ikke brukes til noe... ;)
@@ -82,6 +85,17 @@ public class GreyLevel implements Level {
 	@Override
 	public int getGoalRow() {
 		return -1;
+	}
+
+	@Override
+	public void registerMonster(Monster monster) {
+		return; /* Vi gjør ikke noe med monstre. */
+	}
+
+	@Override
+	public boolean isPlaceDeadly(int dont, int care) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 

@@ -12,4 +12,6 @@ public interface Level extends Paintable, Tickable {
 	public int getStartingRow();
 	public int getGoalColumn();
 	public int getGoalRow();
+	public void registerMonster(Monster monster);
+	public boolean isPlaceDeadly(int column, int row);
 }

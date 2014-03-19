@@ -40,19 +40,28 @@ public class Game {
 			/* Sett brettet til nytt brett hver gang du klarer ett brett.
 			 * Her er det plenty med muligheter til utvidelse av logikken. */
 			level = loader.getLevel(currentLevel);
-			window.loadLevel(level);
-			player.setPosition(level.getStartingColumn(), level.getStartingRow());
+			startLevel();
 
-			 
-			
 			long timestamp = System.nanoTime(); /* Aldri bruk System.currentTimeMillis() til denne type ting. Tenk om du sitter på et tog, krysser en tidssone, og så krasjer spillet. */
 			int timesPerSecond = 1; /* Hvor mange ganger i sekundet entiteter som ikke er spilleren får gjøre noe. */
 			long tickFrequency = 1_000_000_000L / timesPerSecond; /* Her har vi tap av presisjon grunnet heltallsdivisjon. For vårt bruk er dette greit. */
 			long levelStartedAt = timestamp; 
 			/* Sjekker at du ikke har vunnet. Da skal spillet laste neste brett. */
-			while(!(player.getColumn() == level.getGoalColumn() && 
-				    player.getRow() == level.getGoalRow())){
-
+			boolean done = false;
+			while(!done){
+				done = (player.getColumn() == level.getGoalColumn() && 
+					    player.getRow() == level.getGoalRow());
+				
+				if(level.isPlaceDeadly(player.getColumn(), player.getRow())){
+					boolean restart = window.popupDeath();
+					if(restart){
+						startLevel();
+						continue;
+					}
+					else{
+						return;
+					}
+				}
 				long timeSinceLastOp = System.nanoTime() - timestamp;
 
 				if(timeSinceLastOp >= tickFrequency){
@@ -68,6 +77,11 @@ public class Game {
 			currentLevel++;
 		}
 		window.popupGameComplete();
+	}
+	private void startLevel(){
+		player.setPosition(level.getStartingColumn(), level.getStartingRow());
+		player.setDirection(Direction.SOUTH);
+		window.loadLevel(level);
 	}
 	
 	public void shutdown(){

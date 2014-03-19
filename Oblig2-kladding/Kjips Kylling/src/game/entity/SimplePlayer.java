@@ -118,5 +118,4 @@ public class SimplePlayer implements Player {
 	public int getColumn() {
 		return xTile;
 	}
-
 }
