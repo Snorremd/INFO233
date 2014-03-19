@@ -1,6 +1,7 @@
 package game.controller;
 
 import game.entity.AliasNotRegisteredException;
+import game.entity.PlayerNotInstantiatedException;
 import game.entity.SimplePlayer;
 import game.entity.TileNotRegisteredException;
 import game.entity.tiles.IllegalTileException;
@@ -13,8 +14,6 @@ import game.util.ResourceLoader;
 import game.util.SpriteSheetNotFoundException;
 import game.view.GameWindow;
 
-import javax.swing.JOptionPane;
-
 public class Game {
 	protected Player player;
 	protected SimpleKeyboard keyboard;
@@ -22,10 +21,11 @@ public class Game {
 	protected GameWindow window;
 	protected Level level;
 
-	public Game(ResourceLoader loader) throws SpriteSheetNotFoundException, LevelNotFoundException, TileNotRegisteredException, IllegalTileException, AliasNotRegisteredException {
+	public Game(ResourceLoader loader) throws SpriteSheetNotFoundException, LevelNotFoundException, TileNotRegisteredException, IllegalTileException, AliasNotRegisteredException, PlayerNotInstantiatedException {
 		this.loader = loader;
 		this.keyboard = new SimpleKeyboard(this);
-		this.player = new SimplePlayer(loader.getSpriteLoader("player"));		
+		SimplePlayer.init(loader.getSpriteLoader("player"));
+		this.player = SimplePlayer.getInstance();		
 		window = new GameWindow(keyboard, player);
 	}
 
@@ -37,21 +37,21 @@ public class Game {
 		int currentLevel = 1;
 
 		while(currentLevel <= loader.getNumLevels()){
-
 			/* Sett brettet til nytt brett hver gang du klarer ett brett.
 			 * Her er det plenty med muligheter til utvidelse av logikken. */
 			level = loader.getLevel(currentLevel);
 			window.loadLevel(level);
 			player.setPosition(level.getStartingColumn(), level.getStartingRow());
 
-			long timestamp = System.nanoTime();
-			int timesPerSecond = 1; /* Hvor mange ganger i sekundet entiteter som ikke er spilleren får bevege seg. */
-			long tickFrequency = 1_000_000_000L / timesPerSecond;
-
-			boolean won = false;
-			while(!won){
-				won = player.getColumn() == level.getGoalColumn() &&
-						player.getRow() == level.getGoalRow();
+			 
+			
+			long timestamp = System.nanoTime(); /* Aldri bruk System.currentTimeMillis() til denne type ting. Tenk om du sitter på et tog, krysser en tidssone, og så krasjer spillet. */
+			int timesPerSecond = 1; /* Hvor mange ganger i sekundet entiteter som ikke er spilleren får gjøre noe. */
+			long tickFrequency = 1_000_000_000L / timesPerSecond; /* Her har vi tap av presisjon grunnet heltallsdivisjon. For vårt bruk er dette greit. */
+			long levelStartedAt = timestamp; 
+			/* Sjekker at du ikke har vunnet. Da skal spillet laste neste brett. */
+			while(!(player.getColumn() == level.getGoalColumn() && 
+				    player.getRow() == level.getGoalRow())){
 
 				long timeSinceLastOp = System.nanoTime() - timestamp;
 
@@ -60,10 +60,18 @@ public class Game {
 					timestamp = System.nanoTime();
 				}
 			}
-			JOptionPane.showMessageDialog(window, "DU HAR VUNNET", "SEIER!", JOptionPane.INFORMATION_MESSAGE);
+			long levelEndedAt = System.nanoTime();
+			long timeTaken = (levelEndedAt - levelStartedAt) / 100_000_000L;
+
+			window.popupVictory();
+			window.popupGeneric("Tid brukt", String.format("Du har brukt %d tidels sekunder", timeTaken));
 			currentLevel++;
 		}
-		JOptionPane.showMessageDialog(window, "Spill rundet", "Ferdig!", JOptionPane.INFORMATION_MESSAGE);
-		System.exit(0);
+		window.popupGameComplete();
+	}
+	
+	public void shutdown(){
+		window.dispose();
+		window = null;
 	}
 }

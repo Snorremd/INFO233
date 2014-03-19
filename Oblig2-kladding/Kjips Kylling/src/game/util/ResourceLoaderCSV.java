@@ -24,27 +24,34 @@ public class ResourceLoaderCSV implements ResourceLoader{
 	
 	/**
 	 * Lager en ny ResourceLoader, basert på hardkodede stier.
-	 * Dette er ikke i tråd med moderne forståelse av sunn fornuft.
-	 * En del av oppgaven blir nok å sende dette over til en database.
+	 * Jobben deres i obligen blir å skrive ResourceLoaderSQL-klassen, der dere også implementerer ResourceLoader.
+	 * Da kan dere enkelt bytte ut ting i main.Main
+	 * @see {@link http://en.wikipedia.org/wiki/Loose_coupling} for hvorfor dette er en god ide.
 	 * @throws FileNotFoundException Om noen av filene ikke er der.
 	 * @throws IOException Om noe går galt under lesing (CSV-parsing eller lignende)
 	 * @throws TileNotRegisteredException om noen av aliasene refererer til fliser som ikke er registrerte på forhånd.
 	 */
-	public ResourceLoaderCSV() throws FileNotFoundException, IOException, TileNotRegisteredException{
+	public ResourceLoaderCSV() throws FileNotFoundException, IOException, TileNotRegisteredException {
 		/* Dette er ikke egentlig helt smart, men det virker for våre formål */
 		File adventure     = new File("res/adventure.csv");
 		File alias         = new File("res/alias.csv");
 		File spritesheets  = new File("res/spritesheets.csv");
 		File standardTiles = new File("res/standard-tiles.csv");
 		
+		/* Setter opp spriteloaderene */
 		spriteLoaders = new HashMap<>();
 		try(CSVReader rdr = new CSVReader(new FileReader(spritesheets), ',','"',1)){
 			for(String[] row : rdr.readAll()){
-				System.out.printf("[INFO] SpriteLoader(%s) \"%s\" loaded, with file \"%s\"%n", row[2], row[0], row[1]);
-				spriteLoaders.put(row[0], new SpriteLoader(new File(row[1]), Integer.parseInt(row[2])));
+				File imagefile = new File(row[1]);
+				if(!imagefile.exists()){
+					throw new FileNotFoundException(String.format("Kan ikke finne fil \"%s\"", imagefile.getAbsolutePath()));
+				}
+				System.out.printf("[INFO] SpriteLoader(%s) \"%s\" loaded, with file \"%s\"%n", row[2], row[0], imagefile.getAbsolutePath());
+				spriteLoaders.put(row[0], new SpriteLoader(imagefile, Integer.parseInt(row[2])));
 			}
 		}
 		
+		/* Setter opp brettene */
 		levelFiles = new HashMap<>();
 		levelNames = new HashMap<>();
 		try(CSVReader rdr = new CSVReader(new FileReader(adventure), ',', '"', 1)){
@@ -63,6 +70,7 @@ public class ResourceLoaderCSV implements ResourceLoader{
 			}
 		}
 		
+		/* Setter opp tilefactoryen */
 		try {
 			factory = new TileFactory(this.getSpriteLoader("tiles"));
 		} catch (SpriteSheetNotFoundException e) {
@@ -71,6 +79,8 @@ public class ResourceLoaderCSV implements ResourceLoader{
 		
 		factory.registerTiles(standardTiles);
 		factory.registerAliases(alias);
+		
+		/* T-t-t-t-that's all, folks! */
 	}
 	
 	@Override
@@ -80,6 +90,7 @@ public class ResourceLoaderCSV implements ResourceLoader{
 		}
 		
 		try {
+			/* her returnerer vi ett nytt level for hver gang. Det er lov å mellomlagre, men vi velger å ikke gjøre det her. Hvorfor? */
 			return TileLevel.load(getTileFactory(), levelFiles.get(name));
 		} catch (FileNotFoundException e) {
 			throw new LevelNotFoundException(String.format("Levelfile \"%s\" does not exist, cannot load level", levelFiles.get(name).getAbsolutePath()));

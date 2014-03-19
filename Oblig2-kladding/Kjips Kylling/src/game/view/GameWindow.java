@@ -28,16 +28,6 @@ public class GameWindow extends JFrame {
 	}
 	
 	public void loadLevel(Level level){
-//		if(null != lerret){
-//			lerret.stopPainting();
-//			this.remove(lerret);
-//		}
-//		this.lerret = lerretLeverandør.level(level).create();
-//		this.add(lerret);
-//		
-//		this.pack();
-//		this.setVisible(true);
-		
 		if(null == lerret){
 			this.lerret = lerretLeverandør.level(level).create();
 			this.add(lerret);
@@ -59,5 +49,17 @@ public class GameWindow extends JFrame {
 		System.out.printf("I think you chose %s%n", options[choice]);
 		
 		return 0==choice;
+	}
+
+	public void popupVictory() {
+		JOptionPane.showMessageDialog(this, "DU HAR VUNNET", "SEIER!", JOptionPane.INFORMATION_MESSAGE);		
+	}
+	
+	public void popupGameComplete() {
+		JOptionPane.showMessageDialog(this, "Spill rundet", "Ferdig!", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public void popupGeneric(String title, String message){
+		JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
 }

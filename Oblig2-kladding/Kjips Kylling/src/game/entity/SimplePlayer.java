@@ -9,16 +9,35 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 public class SimplePlayer implements Player {
-	SpriteLoader mySprites;
+	private SpriteLoader playerSprites = null;
 	Direction faces;
 	int xTile, yTile, tilesize;
 	
-	public SimplePlayer(SpriteLoader playersprites){
-		this.mySprites = playersprites;
+	private static SimplePlayer ONLY_PLAYER = null;
+	
+	public static boolean init(SpriteLoader loader){
+		if(null == ONLY_PLAYER){
+			ONLY_PLAYER = new SimplePlayer(loader);
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	public static SimplePlayer getInstance() throws PlayerNotInstantiatedException {
+		if(null == ONLY_PLAYER){
+			throw new PlayerNotInstantiatedException("SimplePlayer.init() seems to not have been called successfully. This should be done by a controller at startup");
+		}
+		return ONLY_PLAYER;
+	}
+	
+	private SimplePlayer(SpriteLoader loader){
 		this.faces = Direction.SOUTH;
 		this.xTile = 0;
 		this.yTile = 0;
-		this.tilesize = playersprites.tilesize();
+		this.playerSprites = loader;
+		this.tilesize = playerSprites.tilesize();
 	}
 	
 	@Override
@@ -41,7 +60,7 @@ public class SimplePlayer implements Player {
 			default:
 				row = 0; break;
 		}
-		return mySprites.getImage(col, row);
+		return playerSprites.getImage(col, row);
 	}
 	
 	@Override

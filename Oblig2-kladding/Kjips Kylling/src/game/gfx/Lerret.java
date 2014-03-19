@@ -65,6 +65,9 @@ public class Lerret extends Canvas{
 		if(null != brett){
 			brett.render(g);
 		}
+		
+		// Her skal dere rendre monstre
+		
 		if(null != spiller){
 			spiller.render(g);
 		}
