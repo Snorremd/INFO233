@@ -13,4 +13,8 @@ public class TileNotRegisteredException extends Exception {
 	public TileNotRegisteredException(String msg){
 		super(msg);
 	}
+	
+	public TileNotRegisteredException(String msg, Throwable cause){
+		super(msg, cause);
+	}
 }

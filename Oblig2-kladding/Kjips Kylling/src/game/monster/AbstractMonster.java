@@ -4,6 +4,7 @@ import game.entity.types.Level;
 import game.entity.types.Monster;
 import game.gfx.SpriteLoader;
 import game.util.Direction;
+import game.util.Mover;
 
 import java.awt.Graphics;
 
@@ -31,31 +32,12 @@ public abstract class AbstractMonster implements Monster{
 	
 	@Override
 	public void move(Direction dir, Level l) {
-		facingDirection = dir;
-		switch(facingDirection){
-		case NORTH:
-			if(l.walkable(column, row - 1)){
-				row -= 1; 
-			}
-			break;
-		case WEST:
-			if(l.walkable(column - 1, row)){
-				column -=1;
-			}
-			break;
-		case EAST:
-			if(l.walkable(column + 1, row)){
-				column += 1;
-			}
-			break;
-		case SOUTH:
-			boolean walkable = l.walkable(column, row + 1);
-			if(walkable){
-				row += 1;
-			}
-			break;
+		setDirection(dir);
+		int[] pos = Mover.position(dir, getColumn(), getRow());
+		if(l.walkable(pos[Mover.COLUMN], pos[Mover.ROW])){
+			column = pos[Mover.COLUMN];
+			row    = pos[Mover.ROW];
 		}
-		
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package main;
 
 import game.controller.Game;
-import game.controller.TickType;
 import game.util.ResourceLoader;
 import game.util.ResourceLoaderCSV;
 

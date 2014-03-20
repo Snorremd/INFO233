@@ -14,24 +14,20 @@ public interface ResourceLoader {
 	 * @param name navnet på brettet som skal lastes inn. I CSV-filen er det i kolonnen "name". I SQL-databasen må dere definere navnet selv.
 	 * @return en TileLevel instans. Det er ikke garantert at to kall til getLevel med de samme parametrene vil gi det samme objektet (du kan få samme objektet, men må ikke), men det er garantert at de vil være equal. Skal aldri returnere null
 	 * @throws LevelNotFoundException Dersom brettet ikke er registrert i loaderen.
-	 * @throws TileNotRegisteredException Dersom brettet spesifiserer en Tile som loaderen ikke vet hvordan den skal representere, dvs. et lang-tilenavn, ikke en forkortelse.
-	 * @throws IllegalTileException Dersom en Tile ikke er lovlig plassert.
-	 * @throws AliasNotRegisteredException Dersom en av forkortelsene (et alias) i brettfilen ikke er registrert.
+	 * @throws BuildLevelException Dersom brettet ikke kan bygges (uregistrerte aliaser, fliser, etc.)
 	 * Merk at standardutgaven bruker std.out til å logge hva den laster inn for å gi dere en viss oversikt over hva den vet om.
 	 */
-	public TileLevel getLevel(String name) throws LevelNotFoundException, TileNotRegisteredException, IllegalTileException, AliasNotRegisteredException;
+	public TileLevel getLevel(String name) throws LevelNotFoundException, BuildLevelException;
 	
 	/**
 	 * Returnerer et brett med et gitt nummer.
 	 * @param number nummeret til brettet. Tenk level 1, level 2, og så videre. Dette er i kolonnen level i adventure.csv filen. Hvordan dere gjør det i SQL-løsningen er opp til dere.
 	 * @return en TileLevel instans. To kall til getLevel med de samme parametrene skal gi like objekter, og kan, men trenger ikke gi det samme objektet. Skal aldri returnere null.
 	 * @throws LevelNotFoundException Dersom brettet ikke er registrert i loaderen.
-	 * @throws TileNotRegisteredException Dersom brettet spesifiserer en Tile som loaderen ikke vet hvordan den skal representere, dvs. et lang-tilenavn, ikke en forkortelse.
-	 * @throws IllegalTileException Dersom en Tile ikke er lovlig plassert.
-	 * @throws AliasNotRegisteredException Dersom en av forkortelsene (et alias) i brettfilen ikke er registrert.
+	 * @throws BuildLevelException Dersom brettet ikke kan bygges (uregistrerte aliaser, fliser, etc.)
 	 * Merk at standardutgaven bruker std.out til å logge hva den laster inn for å gi dere en viss oversikt over hva den vet om.
 	 */
-	public TileLevel getLevel(int number) throws LevelNotFoundException, TileNotRegisteredException, IllegalTileException, AliasNotRegisteredException;
+	public TileLevel getLevel(int number) throws LevelNotFoundException, BuildLevelException;
 	
 	/**
 	 * Returnerer en registrert spriteloader til bruk av andre biter av systemet.
@@ -44,7 +40,7 @@ public interface ResourceLoader {
 	 * </table>
 	 * @return Spriteloaderen. Aldri null. Dersom du kaller denne metoden flere ganger med samme argumenter <i>er du garantert å få samme objekt</i>.
 	 *  Dvs. at loader.getSpriteLoader(etNavn) == loader.getSpriteLoader(etNavn) alltid vil holde.
-	 *  Derfor må du mellomlagre
+	 *  Derfor må alle implementasjoner passe på å kunne garantere dette, for eksempel ved mellomlagre.
 	 * @throws SpriteSheetNotFoundException dersom det ikke finnes en spriteloader med det navnet spesifisert.
 	 */
 	public SpriteLoader getSpriteLoader (String name) throws SpriteSheetNotFoundException;

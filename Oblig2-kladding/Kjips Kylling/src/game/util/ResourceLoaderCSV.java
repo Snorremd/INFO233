@@ -84,7 +84,7 @@ public class ResourceLoaderCSV implements ResourceLoader{
 	}
 	
 	@Override
-	public TileLevel getLevel(String name) throws LevelNotFoundException, TileNotRegisteredException, IllegalTileException, AliasNotRegisteredException {
+	public TileLevel getLevel(String name) throws LevelNotFoundException, BuildLevelException {
 		if(!levelFiles.containsKey(name)){
 			throw new LevelNotFoundException(String.format("Level \"%s\" not found.%n", name));
 		}
@@ -92,14 +92,17 @@ public class ResourceLoaderCSV implements ResourceLoader{
 		try {
 			/* her returnerer vi ett nytt level for hver gang. Det er lov å mellomlagre, men vi velger å ikke gjøre det her. Hvorfor? */
 			return TileLevel.load(getTileFactory(), levelFiles.get(name));
-		} catch (FileNotFoundException e) {
-			throw new LevelNotFoundException(String.format("Levelfile \"%s\" does not exist, cannot load level", levelFiles.get(name).getAbsolutePath()));
+		} catch (FileNotFoundException fnfe) {
+			throw new LevelNotFoundException(String.format("Levelfile \"%s\" does not exist, cannot load level", levelFiles.get(name).getAbsolutePath()), fnfe);
+		} catch(TileNotRegisteredException | AliasNotRegisteredException e){
+			throw new BuildLevelException("Kunne ikke bygge brettet.", e);
 		}
+		
 		
 	}
 
 	@Override
-	public TileLevel getLevel(int number) throws LevelNotFoundException, TileNotRegisteredException, IllegalTileException, AliasNotRegisteredException {
+	public TileLevel getLevel(int number) throws LevelNotFoundException, BuildLevelException {
 		if(!levelNames.containsKey(number)){
 			throw new LevelNotFoundException(String.format("No level %d is registered%n", number));
 		}

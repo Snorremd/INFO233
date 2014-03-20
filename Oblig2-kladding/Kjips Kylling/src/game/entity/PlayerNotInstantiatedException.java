@@ -1,6 +1,6 @@
 package game.entity;
 
-public class PlayerNotInstantiatedException extends Exception {
+public class PlayerNotInstantiatedException extends RuntimeException {
 	
 	/**
 	 * autogennet

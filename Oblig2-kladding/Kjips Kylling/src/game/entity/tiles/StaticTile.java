@@ -13,7 +13,7 @@ public class StaticTile implements Tile{
 	protected Direction dir;
 	protected SpriteLoader sl;
 	protected int spriteX, spriteY;
-	protected boolean walkable, pushable, lethal;
+	protected boolean walkable, lethal;
 	
 	/**
 	 * Denne er relativt grusom å bruke. Bruke TileBuilder istedenfor.
@@ -27,12 +27,8 @@ public class StaticTile implements Tile{
 	 * @param walkable om du kan gå på den. Merk at en tile ikke kan være walkable og pushable.
 	 * @param pushable om du kan skubbe på blokken. Merk at en tile ikke kan være walkable og pushable.
 	 * @param lethal om du dør om du tar i den. (Tenk lava, syrebad, etc.)
-	 * @throws IllegalTileException om en tile er walkable og pushable
 	 */
-	public StaticTile(int row, int col, SpriteLoader spriteloader, int spriteX, int spriteY, boolean walkable, boolean pushable, boolean lethal) throws IllegalTileException{
-		if(walkable && pushable){
-			throw new IllegalTileException("A Tile cannot be walkable and pushable");
-		}
+	public StaticTile(int row, int col, SpriteLoader spriteloader, int spriteX, int spriteY, boolean walkable, boolean lethal) {
 		
 		this.row = row;
 		this.col = col;
@@ -40,7 +36,6 @@ public class StaticTile implements Tile{
 		this.spriteX = spriteX;
 		this.spriteY = spriteY;
 		this.walkable = walkable;
-		this.pushable = pushable;
 		this.lethal = lethal;
 		
 	}
@@ -90,16 +85,10 @@ public class StaticTile implements Tile{
 		return walkable;
 	}
 
-	@Override
-	public boolean isPushable() {
-		return pushable;
-	}
-	
 	public String toString(){
-		return String.format("Static tile at (%d,%d), %s, %s, %s",
+		return String.format("Static tile at (%d,%d), %s, %s",
 				getColumn(), getRow(),
 				walkable? "walkable" : "not walkable",
-				pushable? "pushable" : "not pushable",
 				lethal?   "lethal"   : "not lethal");
 	}
 

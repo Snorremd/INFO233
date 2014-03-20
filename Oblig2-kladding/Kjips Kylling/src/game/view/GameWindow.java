@@ -46,11 +46,12 @@ public class GameWindow extends JFrame {
 				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
 				null, options, options[0]);
 		
-		System.out.printf("I think you chose %s%n", options[choice]);
-		
 		return 0==choice;
 	}
 
+	/*
+	 * TODO: Selv om disse popupene virker, burde en ha bedre tekst.
+	 */
 	public void popupVictory() {
 		JOptionPane.showMessageDialog(this, "DU HAR VUNNET", "SEIER!", JOptionPane.INFORMATION_MESSAGE);		
 	}

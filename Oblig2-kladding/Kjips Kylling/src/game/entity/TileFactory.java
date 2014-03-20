@@ -20,14 +20,13 @@ import au.com.bytecode.opencsv.CSVReader;
 public class TileFactory {
 	private SpriteLoader sprites;
 
-	/*
+	/* TODO: Fjern interne kommentarer før utlevering.
 	 * Dette ser ekkelt ut, men alternativet er vel en Map<String, TileConfiguration>
 	 * der TileConfiguration har en metode ala create() : Tile eller noe
 	 * Er ikke helt sikker på beste måten å ha dette på. En database kanskje?
 	 */
 	private Set<String> names;
 	private Map<String, Boolean> walkable;
-	private Map<String, Boolean> pushable;
 	private Map<String, Boolean> lethal;
 	private Map<String, Integer> column; // kolonne i spritesheet, ikke plassering
 	private Map<String, Integer> row;    // også per spritesheet. 
@@ -36,7 +35,6 @@ public class TileFactory {
 	private void init(){
 		names    = new HashSet<>();
 		walkable = new HashMap<>();
-		pushable = new HashMap<>();
 		lethal   = new HashMap<>();
 		column   = new HashMap<>();
 		row      = new HashMap<>();
@@ -52,6 +50,14 @@ public class TileFactory {
 		init();
 	}
 
+	/**
+	 * Registrerer et alias, som er en mapping fra et tegn til en streng i fabrikken.
+	 * Disse aliasene er det som blir brukt til å lese brettfilene.
+	 * @param letter tegnet som skal brukes
+	 * @param aliasFor flisen den skal bety
+	 * @return true dersom den ble registrert, false dersom den ikke ble det. Den kan la vær å bli registrert dersom det allerede finnes et alias med det navnet.
+	 * @throws TileNotRegisteredException dersom tegnet peker til en flis fabrikken ikke vet om.
+	 */
 	public boolean registerAlias(Character letter, String aliasFor) throws TileNotRegisteredException {
 		if(!names.contains(aliasFor)) throw new TileNotRegisteredException("Cannot alias a tile that does not yet exist");		
 		
@@ -64,6 +70,11 @@ public class TileFactory {
 		return true;
 	}
 	
+	/**
+	 * En hjelpermetode som registrerer mange tegn, basert på det en får ut av {@link CSVReader#readAll()};
+	 * @param csvs en liste av arrays av strenger.
+	 * @return true dersom alle flisene ble registrert, false ellers.
+	 */
 	public boolean registerTile(List<String[]> csvs){
 		boolean retval = true;
 		
@@ -74,6 +85,11 @@ public class TileFactory {
 		return retval;
 	}
 	
+	/**
+	 * En hjelpemetode som registrerer et tegn, basert på det en får ut av {@link CSVReader#readNext()}
+	 * @param csv String-arrayet som brukes
+	 * @return true dersom aliaset ble registrert, false ellers.
+	 */
 	public boolean registerTile(String[] csv){
 		String  name     = csv[0];
 		if(names.contains(name)){
@@ -82,7 +98,6 @@ public class TileFactory {
 		names.add(name);
 
 		this.walkable.put(name, Boolean.parseBoolean(csv[1]));
-		this.pushable.put(name, Boolean.parseBoolean(csv[2]));
 		this.lethal.put(name, Boolean.parseBoolean(csv[3]));
 		this.column.put(name, Integer.parseInt(csv[4]));
 		this.row.put(name, Integer.parseInt(csv[5]));
@@ -100,7 +115,7 @@ public class TileFactory {
 	 * @throws TileNotRegisteredException dersom ingen tile med det navnet er gitt.
 	 * @throws IllegalTileException dersom de registrerte dataene er ulovlige.
 	 */
-	public Tile make(String name, int x, int y) throws TileNotRegisteredException, IllegalTileException {
+	public Tile make(String name, int x, int y) throws TileNotRegisteredException {
 		if(!names.contains(name)){
 			String error = String.format("Tile \"%s\" is not registered in database. Have you loaded all data correctly?", name);
 			throw new TileNotRegisteredException(error);
@@ -108,7 +123,7 @@ public class TileFactory {
 
 		/*
 		 *  Dette er forhåpentligvis litt letere å holde orden på
-		 *  Enn å måtte lese gjennom en lanregisterTile(definition)g ugjennomtrengelig  masse av et kall til new StaticTile
+		 *  Enn å måtte lese gjennom en lang ugjennomtrengelig  masse av et kall til new StaticTile
 		 */
 		return new TileBuilder()
 			.col(x)
@@ -117,7 +132,6 @@ public class TileFactory {
 			.spriteY(column.get(name))
 			.spriteloader(sprites)
 			.walkable(walkable.get(name))
-			.pushable(pushable.get(name))
 			.lethal(lethal.get(name))
 			.create();
 	}
@@ -133,7 +147,7 @@ public class TileFactory {
 	 * @throws IllegalTileException om de registrerte dataene er ulovlige
 	 * @throws AliasNotRegisteredException om du ikke har registrert aliaset.
 	 */
-	public Tile make(Character letter, int x, int y) throws TileNotRegisteredException, IllegalTileException, AliasNotRegisteredException {
+	public Tile make(Character letter, int x, int y) throws TileNotRegisteredException, AliasNotRegisteredException {
 		if(!alias.containsKey(letter)){
 			String error = String.format("Alias \"%c\" is not defined. Have you loaded all data?", letter);
 			throw new AliasNotRegisteredException(error);
@@ -141,6 +155,14 @@ public class TileFactory {
 		return make(alias.get(letter), x, y);
 	}
 
+	/**
+	 * Hjelpemetode for å laste inn en fil av par (i CSV-format) av tegn og fliser.
+	 * @param aliasPairs filen som skal leses inn.
+	 * @return true dersom alle ble registrert, false ellers.
+	 * @throws TileNotRegisteredException dersom et alias peker til en flis som ikke er registrert.
+	 * @throws FileNotFoundException dersom fillen ikke finnes.
+	 * @throws IOException dersom parsingen slår feil.
+	 */
 	public boolean registerAliases(File aliasPairs) throws TileNotRegisteredException, FileNotFoundException, IOException {
 		boolean success = true;
 		try(CSVReader rdr = new CSVReader(new FileReader(aliasPairs), ',', '"', 1)){
@@ -166,6 +188,11 @@ public class TileFactory {
 		
 	}
 
+	/**
+	 * En hjelpemetode for å lese inn fliser (Tiles) fra en CSV-fil.
+	 * @param csv filen som skal leses inn.
+	 * @return true dersom alle flisene blir registrert, ellers false.
+	 */
 	public boolean registerTiles(File csv) {
 		try(CSVReader reader = new CSVReader(new FileReader(csv), ',', '"', 1)){
 			this.registerTile(reader.readAll());
@@ -175,6 +202,11 @@ public class TileFactory {
 		return true;
 	}
 
+	/**
+	 * Returnerer størrelsen på en flis.
+	 * Størrelsen er kvadratisk, og er definert av spriteloaderen.
+	 * @return et heltall som representerer størrelsen langs både x-aksen og y-aksen på en flis.
+	 */
 	public int tilesize() {
 		return sprites.tilesize();
 	}

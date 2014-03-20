@@ -1,13 +1,11 @@
 package game.controller;
 
-import game.entity.AliasNotRegisteredException;
-import game.entity.PlayerNotInstantiatedException;
 import game.entity.SimplePlayer;
-import game.entity.TileNotRegisteredException;
-import game.entity.tiles.IllegalTileException;
+import game.entity.TileLevel;
 import game.entity.types.Level;
 import game.entity.types.Player;
 import game.input.SimpleKeyboard;
+import game.util.BuildLevelException;
 import game.util.Direction;
 import game.util.LevelNotFoundException;
 import game.util.ResourceLoader;
@@ -21,7 +19,15 @@ public class Game {
 	protected GameWindow window;
 	protected Level level;
 
-	public Game(ResourceLoader loader) throws SpriteSheetNotFoundException, LevelNotFoundException, TileNotRegisteredException, IllegalTileException, AliasNotRegisteredException, PlayerNotInstantiatedException {
+	/**
+	 * Skaper en ny kontroller.
+	 * Game er ansvarlig for å starte ting, og å holde orden på brett og slikt.
+	 * Game har derimot intet ansvar for hvordan ting blir malt til skjermen.
+	 * En mulighet for å laste inn flere monstre kan være å utvide ResourceLoader til å holde orden på monstre, og la game registrere dem hos brettene.
+	 * @param loader en ResourceLoader som Game kan bruke til å laste inn ting til senere bruk.
+	 * @throws SpriteSheetNotFoundException Dersom spillerens spritesheet ikke kan lastes inn.
+	 */
+	public Game(ResourceLoader loader) throws SpriteSheetNotFoundException {
 		this.loader = loader;
 		this.keyboard = new SimpleKeyboard(this);
 		SimplePlayer.init(loader.getSpriteLoader("player"));
@@ -29,11 +35,16 @@ public class Game {
 		window = new GameWindow(keyboard, player);
 	}
 
-	public void move(Direction where){
+	/**
+	 * Lar deg flytte brukeren. Til dømes kan en tastaturlytter kalle denne metoden. (SimpleKeyboard gjør dette)
+	 * Playerobjektet er selv ansvarlig for å sjekke om den kan gå dit eller ikke.
+	 * @param where retningen spilleren skal bevege seg i.
+	 */
+	public void movePlayer(Direction where){
 		player.move(where, level);
 	}
 
-	public void start() throws LevelNotFoundException, TileNotRegisteredException, IllegalTileException, AliasNotRegisteredException{
+	public void start() throws LevelNotFoundException, BuildLevelException {
 		int currentLevel = 1;
 
 		while(currentLevel <= loader.getNumLevels()){
@@ -46,11 +57,12 @@ public class Game {
 			int timesPerSecond = 1; /* Hvor mange ganger i sekundet entiteter som ikke er spilleren får gjøre noe. */
 			long tickFrequency = 1_000_000_000L / timesPerSecond; /* Her har vi tap av presisjon grunnet heltallsdivisjon. For vårt bruk er dette greit. */
 			long levelStartedAt = timestamp; 
+			
 			/* Sjekker at du ikke har vunnet. Da skal spillet laste neste brett. */
 			boolean done = false;
 			while(!done){
 				done = (player.getColumn() == level.getGoalColumn() && 
-					    player.getRow() == level.getGoalRow());
+					    player.getRow()    == level.getGoalRow());
 				
 				if(level.isPlaceDeadly(player.getColumn(), player.getRow())){
 					boolean restart = window.popupDeath();
@@ -82,6 +94,11 @@ public class Game {
 		player.setPosition(level.getStartingColumn(), level.getStartingRow());
 		player.setDirection(Direction.SOUTH);
 		window.loadLevel(level);
+		
+		/* TODO: FIKS DETTE FØR STUDENTENE FÅR SE HACKEN. Opplagt løsning er å legge ved en reset-metode i interfacet. */
+		if(level instanceof TileLevel){
+			((TileLevel) level).resetMonster();
+		}
 	}
 	
 	public void shutdown(){

@@ -12,4 +12,7 @@ public class AliasNotRegisteredException extends Exception {
 	public AliasNotRegisteredException(String msg){
 		super(msg);
 	}
+	public AliasNotRegisteredException(String msg, Throwable cause){
+		super(msg, cause);
+	}
 }

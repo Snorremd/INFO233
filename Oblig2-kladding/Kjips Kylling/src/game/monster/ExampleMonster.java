@@ -3,7 +3,9 @@ package game.monster;
 import game.entity.types.Level;
 import game.gfx.SpriteLoader;
 import game.util.Direction;
+import game.util.Mover;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class ExampleMonster extends AbstractMonster {
@@ -24,10 +26,16 @@ public class ExampleMonster extends AbstractMonster {
 	@Override
 	public void tick() {
 		/* Gå tilfeldig retning hver tick
-		 * Dere bør kanskje gi deres monstre mer underholdende kommandoer. */
+		 * Dere bør gi deres monstre mer underholdende kommandoer. */
 		Direction[] directions = Direction.values();
-		Direction walkDir = directions[new Random().nextInt(directions.length)];
-		System.out.printf("[INFO] ExampleMonster bestemte seg for å gå %s%n", walkDir);
+		ArrayList<Direction> walkables = new ArrayList<>(4);
+		for(Direction d : directions){
+			int[] pos = Mover.position(d, getColumn(), getRow());
+			if(level.walkable(pos[Mover.COLUMN], pos[Mover.ROW])){
+				walkables.add(d);
+			}
+		}
+		Direction walkDir = walkables.get(new Random().nextInt(walkables.size()));
 		this.move(walkDir, level);
 	}
 }

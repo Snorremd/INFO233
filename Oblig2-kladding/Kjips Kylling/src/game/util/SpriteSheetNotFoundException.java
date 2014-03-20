@@ -14,4 +14,7 @@ public class SpriteSheetNotFoundException extends Exception {
 	public SpriteSheetNotFoundException(String msg){
 		super(msg);
 	}
+	public SpriteSheetNotFoundException(String msg, Throwable cause){
+		super(msg, cause);
+	}
 }

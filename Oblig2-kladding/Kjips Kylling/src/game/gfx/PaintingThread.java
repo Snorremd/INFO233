@@ -1,9 +1,19 @@
 package game.gfx;
 
-
+/**
+ * En enkel tråd som prøver å male 60 bilder i sekunder.
+ * (Dvs. maks 60 FPS)
+ * @author Haakon Løtveit (haakon.lotveit@student.uib.no)
+ *
+ */
 public class PaintingThread extends Thread{
 	Lerret l;
 	
+	/**
+	 * Lager en ny malertråd, som maler et lerret.
+	 * @param l lerretet som skal males.
+	 * @throws NullPointerException dersom du gir en null til konstruktøren.
+	 */
 	public PaintingThread(Lerret l) throws NullPointerException {
 		super();
 		if(null == l){
@@ -21,7 +31,7 @@ public class PaintingThread extends Thread{
 		long timestamp = System.nanoTime();
 		long paintFrequency = 1_000_000_000L / 60L; // 60 ganger per sekund
 		
-		while(!Thread.interrupted()){
+		while(!Thread.interrupted()){ /* Hvis du interrupter tråden, avslutter den. */
 			long timeSinceLastPaint = System.nanoTime() - timestamp;
 
 			if(timeSinceLastPaint >= paintFrequency){

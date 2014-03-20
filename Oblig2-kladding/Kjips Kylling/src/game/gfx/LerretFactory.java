@@ -5,25 +5,13 @@ import game.entity.types.Player;
 import game.input.SimpleKeyboard;
 
 /**
- * Dette er en klasse for å lett kunne lage objekter av Lerret-klassen.
- * <br>
- * Lerret er et litt søkt eksempel for denne typen funksjonalitet,
- * men jeg håper at dere ser poenget bak denne typen fabrikker.
- * <br>
- * Du setter variablene (og du kan kjede dem, så du kan sette flere på samme linje),
- * og så kan du be fabrikken om å spytte ut nye objekter når du trenger dem.
- * <br>
- * Den viser i tillegg hvordan du bør hashe ting, som blir nytt til denne obligen.
- * Husk at alle fornuftige klasser overkjøre equals, hashCode og toString. Ha det gøy!
- * <br>
- * Et eksempel på bruk kan være:
- * <br><code>
- * LerretFactory lf = new LerretFactory();
- * lf.title("Tittel").tilesize(64).horizontalTiles(5).verticalTiles(5).create();
- * lf.title("Tittel2").create();
- * </code><br>
- * Det ville lagd to lerret-objketer, begge like store, med to forskjellige titler.
+ * Dette er et objekt for å lett lage objekter av lerret-klassen og er fra en tidligere utgave av spillet
+ * der klassen var betraktelig mer komplisert enn den er nå.
  * 
+ * Slik den er nå er den en fancy konstruktørting som sannsynligvis ingen skjønner vitsen med.
+ * 
+ * Den har noen kommentarer i seg om hvordan cloneable, toString, hashCode og equals må være,
+ * men ellers er det ikke noe interessant her.
  * @author Haakon Løtveit (haakon.lotveit@student.uib.no)
  *
  */

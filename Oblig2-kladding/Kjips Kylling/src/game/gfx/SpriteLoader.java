@@ -23,9 +23,9 @@ public class SpriteLoader {
 	 * Effektivitet er ikke superviktig i denne obligen, og perf blir bra nok uansett, men vi følger best practices,
 	 * slik at dere ser hvordan det gjøres. Teknikken er også brukt i internettverdenen for å laste småbilder raskere, for samme ytelsesårsakene som for spill.
 	 * 
-	 * Opprinnelig skulle spillet kjøres på en 16mhz 286 med 1mb RAM. Oddsene er at maskinene deres er raske nok til at dette går fint.
+	 * Opprinnelig utgave av dette spillet (som var mer komplisert enn dette) skulle kjøres på en 16mhz 286 med 1mb RAM. Oddsene er at maskinene deres er raske nok til at dette går fint uansett.
 	 * 
-	 * @param spriteSheet en bitmap av et slag, helst .png, men .bmp skulle også gå helt fint.
+	 * @param spriteSheet en bitmap av et slag, helst .png, andre formater er ikke testet.
 	 * @param tilesize hvor stor en sprite er. I vårt spill er tiles kvadratiske, så bare en verdi, ikke en for x og en for y.
 	 * @throws IOException dersom filen ikke blir lastet inn korrekt. (For eksempel om filen ikke finnes.)
 	 * 
@@ -67,7 +67,7 @@ public class SpriteLoader {
 	 * Lar dere sakse ut et bilde fra arket fra hvilke som helst koordinater, med den størrelsen dere selv vil ha.
 	 * For eksempel kan dere be om et bilde som er fra (0,0) til (64,64) ved å be om 
 	 * getImage(0,0 new Dimension(64,64));
-	 * Det er anbefalt at dere holder dere til den enklere getImage-metoden til normalt bruk.
+	 * Det er anbefalt at dere holder dere til den enklere getImage-metoden til normal bruk.
 	 * Heller ikke her er det noen sjekk om at dere gir korrekte opplysninger.
 	 * 
 	 * @param xPos Hvilken horizontal piksel (den lengst til venstre er 0) du vil begynne på

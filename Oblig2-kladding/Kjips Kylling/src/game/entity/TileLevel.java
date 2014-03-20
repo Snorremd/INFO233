@@ -1,9 +1,7 @@
 package game.entity;
 
-import game.entity.tiles.IllegalTileException;
 import game.entity.types.Level;
 import game.entity.types.Monster;
-import game.entity.types.Player;
 import game.entity.types.Tile;
 import game.gfx.SpriteLoader;
 import game.monster.ExampleMonster;
@@ -17,7 +15,16 @@ import java.util.Scanner;
 public class TileLevel implements Level {
 	private int startCol, startRow, goalCol, goalRow;
 
-	public static TileLevel load(TileFactory dispenser, File levelFile) throws FileNotFoundException, TileNotRegisteredException, IllegalTileException, AliasNotRegisteredException {
+	/**
+	 * Leser et brett fra en fil.
+	 * @param dispenser fabrikken som skal spytte ut flisene
+	 * @param levelFile brettfilen
+	 * @return et ferdig TileLevel, klart til bruk.
+	 * @throws FileNotFoundException dersom filen ikke blir funnet.
+	 * @throws TileNotRegisteredException Dersom en Tile/flis blir referert til som ikke er registrert i dispenser.
+	 * @throws AliasNotRegisteredException dersom et alias blir referert til som ikke er registrert i dispenser.
+	 */
+	public static TileLevel load(TileFactory dispenser, File levelFile) throws FileNotFoundException, TileNotRegisteredException, AliasNotRegisteredException {
 		int numCols, numRows, startCol, startRow, goalCol, goalRow;
 		String[] wholeMap;
 		/* Dere som har tatt inf100 kjenner forhåpentligvis igjen java.util.Scanner.
@@ -33,20 +40,9 @@ public class TileLevel implements Level {
 				goalCol = firstLine.nextInt();
 				goalRow = firstLine.nextInt();
 				
+				/* Se game.util.IOStuff for mer detaljer*/
 				wholeMap = mapreader.useDelimiter("\\Z").next().split("\n"); 
-				/*
-				 * \\Z blir til \Z, som blir til EOF-tegnet (End Of File), på samme måte som "\n" blir til newline (ny linje).
-				 * Det vi sier ovenfor er altså at scanneren skal lese til slutten av filen, og så sier vi at den skal lese neste.
-				 * Vi kan bruke hva som helst som delimiter, også ting som "fisk".
-				 * Hadde vi hatt strengen "eplefiskpærefiskappelsin" kunne vi brukt en scanner med "fisk" som delimiter til å hente ut "eple", "pære" og "appelsin".
-				 * Dette er et veldig fint triks hvis du bare vil ha en hel fil som en streng:
-				 * String fil = "";
-				 * try(Scanner sc = new Scanner(hva enn filen heter)){
-				 *     fil = sc.useDelimiter("\\Z").next();
-				 * } catch (FileNotFoundException fnfe){
-				 *     // gjør ting om filen ikke blir funnet
-				 * }
-				 */
+				
 			}
 		}
 		
@@ -60,14 +56,25 @@ public class TileLevel implements Level {
 				map[curCol][curRow] = dispenser.make(columns[curCol].charAt(0), curCol, curRow);
 			}
 		}
-		TileLevel tl = new TileLevel(numCols, numRows, dispenser.tilesize(), startCol, startRow, goalCol, goalRow, map);
-		return tl;
+		return new TileLevel(numCols, numRows, dispenser.tilesize(), startCol, startRow, goalCol, goalRow, map);
 	}
 	
 	int width, height, tilesize;
-	Tile[][] map; // map as in geography, not data structure.
+	Tile[][] map; /* map som i geografien på brettet, ikke datastrukturen. */
 	Monster theMonster; /* TODO: en del av obligen er å legge til støtte for monstre. Hvordan dere gjør det er opp til dere. Kanskje en datastruktur som ble gjennomgått på forelesning? */
 	
+	/**
+	 * Standard konstruktør for et brett.
+	 * Det er kanskje ikke så veldig relevant å bruke denne, sannsynligvis kommer dere til å holde dere Til TileLevel.loadLevel(TileFactory,File)
+	 * @param width antall kolonner.
+	 * @param height antall rader
+	 * @param tilesize størrelsen på en flis.
+	 * @param startCol hvilken kolonne spilleren skal begynne på kartet på.
+	 * @param startRow hvilken rad spilleren skal begynne på kartet på.
+	 * @param goalCol hvilken kolonne spilleren skal ende opp på.
+	 * @param goalRow hvilken rad spilleren skal ende opp på.
+	 * @param map en tabell av fliser som er kartet. Det er antatt, men ikke sjekket at tabellen er firkantet.
+	 */
 	public TileLevel(int width, int height, int tilesize, int startCol, int startRow, int goalCol, int goalRow, Tile[][] map){
 		this.startCol = startCol;
 		this.startRow = startRow;
@@ -106,10 +113,16 @@ public class TileLevel implements Level {
 		}
 	}
 	
+	/* DETTE ER OGSÅ EN STYGG HACK SOM IKKE SKAL VÆRE DER NÅR DERE LEVERER INN! */
+	public void resetMonster(){
+		putMonster();
+	}
+	
 	@Override
 	public void registerMonster(Monster m){
-		this.theMonster = m;
+		this.theMonster = m; /* TODO: Dere må ta hånd om mer enn et monster. */
 	}
+	
 	
 	@Override
 	public void render(Graphics gfx) {
@@ -141,6 +154,12 @@ public class TileLevel implements Level {
 		return true;
 	}
 	
+	/**
+	 * Enkel metode som sjekker om en posisjon er innenfor brettet.
+	 * @param column kolonnen vi sjekker
+	 * @param row raden vi sjekker
+	 * @return
+	 */
 	protected boolean checkLevelBounds(int column, int row){
 		return !(column < 0 || column > width - 1 || row < 0 || row > height - 1);
 	}

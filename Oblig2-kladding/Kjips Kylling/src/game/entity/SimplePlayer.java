@@ -4,6 +4,7 @@ import game.entity.types.Level;
 import game.entity.types.Player;
 import game.gfx.SpriteLoader;
 import game.util.Direction;
+import game.util.Mover;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -25,6 +26,13 @@ public class SimplePlayer implements Player {
 		}
 	}
 	
+	/**
+	 * For å få fatt på SimplePlayer kaller du getInstance()
+	 * Alle kall til SimplePlayer#getInstance() returnerer den samme instansen.
+	 * @return Den ene unike instansen av SimplePlayer.
+	 * @throws PlayerNotInstantiatedException en RuntimeException dersom SimplePlayer#init() ikke har blitt kalt før du ber om getInstance().
+	 *  Du MÅ være sikker på at init blir kalt først.
+	 */
 	public static SimplePlayer getInstance() throws PlayerNotInstantiatedException {
 		if(null == ONLY_PLAYER){
 			throw new PlayerNotInstantiatedException("SimplePlayer.init() seems to not have been called successfully. This should be done by a controller at startup");
@@ -45,6 +53,11 @@ public class SimplePlayer implements Player {
 		gfx.drawImage(getImg(), xTile * tilesize, yTile * tilesize, null);
 	}
 
+	/**
+	 * Ment til internt bruk.
+	 * Dersom du arver klassen og overkjører denne vil det ha konsekvenser for rendringen av spilleren.
+	 * @return bilde som skal brukes dersom SimplePlayer skal males akkurat nå.
+	 */
 	protected BufferedImage getImg(){
 		int col = 0;
 		int row;
@@ -64,36 +77,12 @@ public class SimplePlayer implements Player {
 	}
 	
 	@Override
-	public void tick() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void move(Direction dir, Level l) {
-		faces = dir;
-		switch(faces){
-		case NORTH:
-			if(l.walkable(xTile, yTile - 1)){
-				yTile -= 1; 
-			}
-			break;
-		case WEST:
-			if(l.walkable(xTile - 1, yTile)){
-				xTile -=1;
-			}
-			break;
-		case EAST:
-			if(l.walkable(xTile + 1, yTile)){
-				xTile += 1;
-			}
-			break;
-		case SOUTH:
-			boolean walkable = l.walkable(xTile, yTile + 1);
-			if(walkable){
-				yTile += 1;
-			}
-			break;
+		setDirection(dir);
+		int[] pos = Mover.position(dir, getColumn(), getRow());
+		if(l.walkable(pos[Mover.COLUMN], pos[Mover.ROW])){
+			xTile = pos[Mover.COLUMN];
+			yTile = pos[Mover.ROW];
 		}
 		
 		System.out.printf("Facing %s, at (%d,%d)%n", faces, xTile, yTile);

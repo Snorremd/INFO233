@@ -23,11 +23,6 @@ public class TileBuilder {
 		return this;
 	}
 
-	public TileBuilder pushable(boolean pushable){
-		this.pushable = pushable;
-		return this;
-	}
-
 	public TileBuilder lethal(boolean lethal){
 		this.lethal = lethal;
 		return this;
@@ -53,7 +48,7 @@ public class TileBuilder {
 		return this;
 	}
 
-	public StaticTile create() throws IllegalTileException{
-		return new StaticTile(row, col, spriteloader, spriteX, spriteY, walkable, pushable, lethal);
+	public StaticTile create() {
+		return new StaticTile(row, col, spriteloader, spriteX, spriteY, walkable, lethal);
 	}
 }
