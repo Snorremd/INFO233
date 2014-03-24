@@ -9,6 +9,13 @@ import game.util.Mover;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+/**
+ * En enkel implementasjon av en {@link Player}, implementert som en Singleton {@link http://en.wikipedia.org/wiki/Singleton_pattern},
+ * slik at vi bare har en spiller på et gitt tidspunkt.
+ * 
+ * @author Haakon Løtveit (haakon.lotveit@student.uib.no)
+ *
+ */
 public class SimplePlayer implements Player {
 	private SpriteLoader playerSprites = null;
 	Direction faces;
@@ -16,6 +23,14 @@ public class SimplePlayer implements Player {
 	
 	private static SimplePlayer ONLY_PLAYER = null;
 	
+	/**
+	 * Initialiserer Simpleplayer.
+	 * For å kunne ha en SimplePlayer må vi ha en SpriteLoader, som den ikke kan vite om på egenhånd.
+	 * Derfor må dette kalles utenfra.
+	 * Dersom en kaller {@link SimplePlayer#getInstance()} uten å ha kalt init først vil spillet krasje hardt.
+	 * @param loader SpriteLoaderen som blir satt.
+	 * @return true om spilleren ble instansiert, fals hvis den allerede var det.
+	 */
 	public static boolean init(SpriteLoader loader){
 		if(null == ONLY_PLAYER){
 			ONLY_PLAYER = new SimplePlayer(loader);
@@ -35,7 +50,7 @@ public class SimplePlayer implements Player {
 	 */
 	public static SimplePlayer getInstance() throws PlayerNotInstantiatedException {
 		if(null == ONLY_PLAYER){
-			throw new PlayerNotInstantiatedException("SimplePlayer.init() seems to not have been called successfully. This should be done by a controller at startup");
+			throw new PlayerNotInstantiatedException("SimplePlayer.init() seems to not have been called successfully. This should be done by a controller at startup, and MUST be done before calling getInstance()");
 		}
 		return ONLY_PLAYER;
 	}

@@ -1,4 +1,4 @@
-package game.entity;
+package game.entity.tiles;
 
 public class AliasNotRegisteredException extends Exception {
 	/**

@@ -8,7 +8,15 @@ import game.util.Mover;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Et eksempel på et enkelt monster.
+ * Går en tilfeldig rute per tick.
+ * 
+ * @author Haakon Løtveit (haakon.lotveit@student.uib.no)
+ *
+ */
 public class ExampleMonster extends AbstractMonster {
+	private int tickCounter = 0;
 	/**
 	 * 
 	 * @param level brettet monsteret skal være på
@@ -25,8 +33,17 @@ public class ExampleMonster extends AbstractMonster {
 
 	@Override
 	public void tick() {
-		/* Gå tilfeldig retning hver tick
+		/* Gå tilfeldig retning hver tick 250nde tick
 		 * Dere bør gi deres monstre mer underholdende kommandoer. */
+
+		
+		/* Bare gjør noe hver nte tick. */
+		int nteTick = 250;
+		if((tickCounter++ % nteTick) != 0){
+			return;
+		}
+		
+		/* Gå i en tilfeldig retning */
 		Direction[] directions = Direction.values();
 		ArrayList<Direction> walkables = new ArrayList<>(4);
 		for(Direction d : directions){

@@ -1,10 +1,9 @@
 package game.util;
 
-import game.entity.AliasNotRegisteredException;
-import game.entity.TileFactory;
 import game.entity.TileLevel;
-import game.entity.TileNotRegisteredException;
-import game.entity.tiles.IllegalTileException;
+import game.entity.tiles.AliasNotRegisteredException;
+import game.entity.tiles.TileFactory;
+import game.entity.tiles.TileNotRegisteredException;
 import game.gfx.SpriteLoader;
 
 import java.io.File;
@@ -16,6 +15,14 @@ import java.util.Map;
 
 import au.com.bytecode.opencsv.CSVReader;
 
+/**
+ * En ResourceLoader-klasse som laster ressurser fra hardkodede CSV-filer.
+ * En stor del av obligen er å skrive ResourceLoaderSQL, som leser fra en SQL-database.
+ * 
+ * To ResourceLoader-instanser anses å være like hvis og bare hvis de er samme instansen, og derfor er ikke hashCode og equals overkjørt.
+ * @author Haakon Løtveit (haakon.lotveit@student.uib.no)
+ *
+ */
 public class ResourceLoaderCSV implements ResourceLoader{
 	protected Map<String, SpriteLoader> spriteLoaders;
 	protected Map<String, File> levelFiles;
@@ -32,7 +39,7 @@ public class ResourceLoaderCSV implements ResourceLoader{
 	 * @throws TileNotRegisteredException om noen av aliasene refererer til fliser som ikke er registrerte på forhånd.
 	 */
 	public ResourceLoaderCSV() throws FileNotFoundException, IOException, TileNotRegisteredException {
-		/* Dette er ikke egentlig helt smart, men det virker for våre formål */
+		/* Det er diskutabelt i hvilken grad en bør tillate hardkodede stier, men dere skal tross alt migrere vekk fra dette. */
 		File adventure     = new File("res/adventure.csv");
 		File alias         = new File("res/alias.csv");
 		File spritesheets  = new File("res/spritesheets.csv");
@@ -90,7 +97,7 @@ public class ResourceLoaderCSV implements ResourceLoader{
 		}
 		
 		try {
-			/* her returnerer vi ett nytt level for hver gang. Det er lov å mellomlagre, men vi velger å ikke gjøre det her. Hvorfor? */
+			/* her returnerer vi ett nytt level for hver gang. Det er lov å mellomlagre, men vi velger å ikke gjøre det her. */
 			return TileLevel.load(getTileFactory(), levelFiles.get(name));
 		} catch (FileNotFoundException fnfe) {
 			throw new LevelNotFoundException(String.format("Levelfile \"%s\" does not exist, cannot load level", levelFiles.get(name).getAbsolutePath()), fnfe);

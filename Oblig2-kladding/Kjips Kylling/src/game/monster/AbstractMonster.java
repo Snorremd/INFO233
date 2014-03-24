@@ -8,6 +8,12 @@ import game.util.Mover;
 
 import java.awt.Graphics;
 
+/**
+ * Et enkelt monster dere kan arve fra hvis dere vil gjøre det enkelt med grafikk og slikt.
+ * 
+ * @author Haakon Løtveit (haakon.lotveit@student.uib.no)
+ *
+ */
 public abstract class AbstractMonster implements Monster{
 	protected int column, row, sheetRow, sheetColumn;
 	protected Direction facingDirection;

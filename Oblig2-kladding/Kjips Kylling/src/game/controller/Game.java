@@ -1,7 +1,6 @@
 package game.controller;
 
 import game.entity.SimplePlayer;
-import game.entity.TileLevel;
 import game.entity.types.Level;
 import game.entity.types.Player;
 import game.input.SimpleKeyboard;
@@ -12,6 +11,14 @@ import game.util.ResourceLoader;
 import game.util.SpriteSheetNotFoundException;
 import game.view.GameWindow;
 
+/**
+ * Denne klassen er en kontroller (of sorts) for spillet.
+ * Den laster inn data vha. en ResourceLoader, og starter ting.
+ * To instanser anses å være like hviss de er samme objekt.
+ * 
+ * @author Haakon Løtveit (haakon.lotveit@student.uib.no)
+ *
+ */
 public class Game {
 	protected Player player;
 	protected SimpleKeyboard keyboard;
@@ -44,26 +51,35 @@ public class Game {
 		player.move(where, level);
 	}
 
+	/**
+	 * Starter spillet. For hvert brett laster det inn brettet vha. ResourceLoaderen og lar deg spille det brettet til du vinner.
+	 * Hvis du dør kan du restarte, etc.
+	 * Når du har rundet spillet, avslutter start();
+	 * @throws LevelNotFoundException Dersom et av brettene ikke blir funnet.
+	 * 	Nåværende start() vil begynne på første brett (1) og deretter inkremementere til siste brett. 
+	 *  (Siste brett blir funnet vha. et kall til {@link ResourceLoader#getNumLevels()}. Hvis dere ikke følger konvensjonen med brett 1,2,…,n vil ikke denne metoden virke korrekt.) 
+	 * @throws BuildLevelException Dersom lastingen av et brett går galt. Se: {@link ResourceLoader#getLevel(int)} for detaljene
+	 */
 	public void start() throws LevelNotFoundException, BuildLevelException {
 		int currentLevel = 1;
 
 		while(currentLevel <= loader.getNumLevels()){
 			/* Sett brettet til nytt brett hver gang du klarer ett brett.
 			 * Her er det plenty med muligheter til utvidelse av logikken. */
+			
 			level = loader.getLevel(currentLevel);
 			startLevel();
 
-			long timestamp = System.nanoTime(); /* Aldri bruk System.currentTimeMillis() til denne type ting. Tenk om du sitter på et tog, krysser en tidssone, og så krasjer spillet. */
-			int timesPerSecond = 1; /* Hvor mange ganger i sekundet entiteter som ikke er spilleren får gjøre noe. */
+			long timestamp = System.nanoTime(); 				  /* Aldri bruk System.currentTimeMillis() til denne type ting. Tenk om du sitter på et tog, krysser en tidssone, og så krasjer spillet. */
+			int timesPerSecond = 1000;                            /* Hvor mange ganger i sekundet entiteter som ikke er spilleren får gjøre noe. */
 			long tickFrequency = 1_000_000_000L / timesPerSecond; /* Her har vi tap av presisjon grunnet heltallsdivisjon. For vårt bruk er dette greit. */
 			long levelStartedAt = timestamp; 
 			
 			/* Sjekker at du ikke har vunnet. Da skal spillet laste neste brett. */
-			boolean done = false;
-			while(!done){
-				done = (player.getColumn() == level.getGoalColumn() && 
-					    player.getRow()    == level.getGoalRow());
+			while(!(player.getColumn() == level.getGoalColumn() && 
+					player.getRow()    == level.getGoalRow())){
 				
+				/* Sjekker om spilleren har gått på noe dødelig */
 				if(level.isPlaceDeadly(player.getColumn(), player.getRow())){
 					boolean restart = window.popupDeath();
 					if(restart){
@@ -74,15 +90,16 @@ public class Game {
 						return;
 					}
 				}
+				
 				long timeSinceLastOp = System.nanoTime() - timestamp;
-
+				
 				if(timeSinceLastOp >= tickFrequency){
 					level.tick();
 					timestamp = System.nanoTime();
 				}
 			}
-			long levelEndedAt = System.nanoTime();
-			long timeTaken = (levelEndedAt - levelStartedAt) / 100_000_000L;
+			
+			long timeTaken = (System.nanoTime() - levelStartedAt) / 100_000_000L;
 
 			window.popupVictory();
 			window.popupGeneric("Tid brukt", String.format("Du har brukt %d tidels sekunder", timeTaken));
@@ -90,15 +107,12 @@ public class Game {
 		}
 		window.popupGameComplete();
 	}
+	
 	private void startLevel(){
-		player.setPosition(level.getStartingColumn(), level.getStartingRow());
-		player.setDirection(Direction.SOUTH);
+		level.reset(player);
 		window.loadLevel(level);
-		
-		/* TODO: FIKS DETTE FØR STUDENTENE FÅR SE HACKEN. Opplagt løsning er å legge ved en reset-metode i interfacet. */
-		if(level instanceof TileLevel){
-			((TileLevel) level).resetMonster();
-		}
+		/* TODO: En ting som kunne vært artig hadde vært en spesifikk tekst til hvert brett */
+		window.popupGeneric("Velkomsttekst, placeholder", "Placeholdertekst som du bør bytte ut");
 	}
 	
 	public void shutdown(){

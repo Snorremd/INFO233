@@ -11,13 +11,13 @@ public class Mover {
 	 * Satt til 0.
 	 */
 	public static final int COLUMN = 0;
-	
+
 	/**
 	 * Gitt at du kaller Mover.position(int,int)[Mover.ROW], vil du få ut raden i arrayet.
 	 * Satt til 1.
 	 */
 	public static final int ROW = 1;
-	
+
 	/**
 	 * Beregner hvor du ender opp hvis du går et skritt i en gitt retning.
 	 * @param dir Retningen du går i.
@@ -27,7 +27,7 @@ public class Mover {
 	 */
 	public static int[] position(Direction dir, int x, int y){
 		int[] retval = {x, y};
-		
+
 		switch(dir){
 		case NORTH:
 			--retval[ROW]; break;
@@ -38,7 +38,33 @@ public class Mover {
 		case SOUTH:
 			++retval[ROW]; break;
 		}
-		
+
 		return retval;
+	}
+
+	public static Direction turnLeft(Direction from){
+		Direction newDirection = from;
+		switch(from){
+		case NORTH: newDirection = Direction.WEST;  break;
+		case WEST: newDirection  = Direction.SOUTH; break;
+		case SOUTH: newDirection = Direction.EAST;  break;
+		case EAST: newDirection  = Direction.NORTH; break;
+		}
+		return newDirection;
+	}
+	
+	public static Direction turnAround(Direction from){
+		Direction newDirection = from;
+		switch(from){
+		case NORTH: newDirection = Direction.SOUTH; break;
+		case SOUTH: newDirection = Direction.NORTH; break;
+		case WEST: newDirection = Direction.EAST; break;
+		case EAST: newDirection = Direction.WEST; break;
+		}
+		return newDirection;
+	}
+	
+	public static Direction turnRight(Direction from){
+		return turnLeft(turnAround(from)); /* Så dere DEN komme? */
 	}
 }

@@ -1,17 +1,33 @@
 package game.entity;
 
+import game.entity.tiles.AliasNotRegisteredException;
+import game.entity.tiles.TileFactory;
+import game.entity.tiles.TileNotRegisteredException;
 import game.entity.types.Level;
 import game.entity.types.Monster;
+import game.entity.types.Player;
 import game.entity.types.Tile;
 import game.gfx.SpriteLoader;
 import game.monster.ExampleMonster;
+import game.util.Direction;
 
 import java.awt.Graphics;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Scanner;
 
+import static game.util.EffectiveJavaHasher.*;
+
+/**
+ * En standard implementasjon av et todimensjonalt brett.
+ * Den bruker tiles (fliser) til å male brettet.
+ * For å skaffe flisene bruker den en {@link TileFactory}.
+ * 
+ * @author Haakon Løtveit (haakon.lotveit@student.uib.no)
+ *
+ */
 public class TileLevel implements Level {
 	private int startCol, startRow, goalCol, goalRow;
 
@@ -32,37 +48,37 @@ public class TileLevel implements Level {
 		 */
 		try(Scanner mapreader = new Scanner(levelFile)){
 			try(Scanner firstLine = new Scanner(mapreader.nextLine())){
-				
+
 				numCols = firstLine.nextInt();
 				numRows = firstLine.nextInt();
 				startCol = firstLine.nextInt();
 				startRow = firstLine.nextInt();
 				goalCol = firstLine.nextInt();
 				goalRow = firstLine.nextInt();
-				
+
 				/* Se game.util.IOStuff for mer detaljer*/
 				wholeMap = mapreader.useDelimiter("\\Z").next().split("\n"); 
-				
+
 			}
 		}
-		
+
 		Tile[][] map = new Tile[numCols][numRows];
-		
+
 		for(int curRow = 0; curRow < numRows; ++curRow){
 			String row = wholeMap[curRow];
 			String[] columns = row.split("\\s+");
-			
+
 			for(int curCol = 0; curCol < numCols; ++curCol){
 				map[curCol][curRow] = dispenser.make(columns[curCol].charAt(0), curCol, curRow);
 			}
 		}
 		return new TileLevel(numCols, numRows, dispenser.tilesize(), startCol, startRow, goalCol, goalRow, map);
 	}
-	
-	int width, height, tilesize;
-	Tile[][] map; /* map som i geografien på brettet, ikke datastrukturen. */
-	Monster theMonster; /* TODO: en del av obligen er å legge til støtte for monstre. Hvordan dere gjør det er opp til dere. Kanskje en datastruktur som ble gjennomgått på forelesning? */
-	
+
+	private int width, height, tilesize;
+	private Tile[][] map; /* map som i geografien på brettet, ikke datastrukturen. */
+	private Monster theMonster; /* TODO: en del av obligen er å legge til støtte for monstre. Hvordan dere gjør det er opp til dere. Kanskje en datastruktur som ble gjennomgått på forelesning? */
+
 	/**
 	 * Standard konstruktør for et brett.
 	 * Det er kanskje ikke så veldig relevant å bruke denne, sannsynligvis kommer dere til å holde dere Til TileLevel.loadLevel(TileFactory,File)
@@ -84,14 +100,14 @@ public class TileLevel implements Level {
 		this.height = height;
 		this.tilesize = tilesize;
 		this.map = map;
-		
+
 		/* 
 		 * TODO: Dette må selvsagt vekk og erstattes med en ordentlig måte å populere et kart med monstre på.
 		 * Hvordan dere velger å lagre hvor monstre er på et brett er selvsagt helt opp til dere. 
 		 */
 		putMonster();
 	}
-	
+
 	/* DETTE ER IKKE EN GOD PROSEDYRE. DETTE ER EN STYGG HACK FOR Å VISE ET ENKELT MONSTER. */
 	private void putMonster(){
 		for(int row = 0; row < height; ++row){
@@ -112,18 +128,20 @@ public class TileLevel implements Level {
 			}
 		}
 	}
-	
-	/* DETTE ER OGSÅ EN STYGG HACK SOM IKKE SKAL VÆRE DER NÅR DERE LEVERER INN! */
-	public void resetMonster(){
+
+	@Override
+	public void reset(Player player){
+		player.setPosition(getStartingColumn(), getStartingRow());
+		player.setDirection(Direction.SOUTH);
 		putMonster();
 	}
-	
+
 	@Override
 	public void registerMonster(Monster m){
 		this.theMonster = m; /* TODO: Dere må ta hånd om mer enn et monster. */
 	}
-	
-	
+
+
 	@Override
 	public void render(Graphics gfx) {
 		for(Tile[] tiles : map){
@@ -131,7 +149,7 @@ public class TileLevel implements Level {
 				t.render(gfx);
 			}
 		}
-		
+
 		/* TODO: Dette vil jo selvsagt ikke virke når du skal ha flere monstre. */
 		theMonster.render(gfx);
 	}
@@ -153,7 +171,7 @@ public class TileLevel implements Level {
 
 		return true;
 	}
-	
+
 	/**
 	 * Enkel metode som sjekker om en posisjon er innenfor brettet.
 	 * @param column kolonnen vi sjekker
@@ -194,12 +212,12 @@ public class TileLevel implements Level {
 	public int getStartingRow() {
 		return startRow;
 	}
-	
+
 
 	@Override 
 	public String toString(){
 		return String.format("TileMap (%d×%d), Start: (%d,%d), Goal: (%d,%d)",
-							 tileColumns(), tileRows(), getStartingColumn(), getStartingRow(), goalCol, goalRow);
+				tileColumns(), tileRows(), getStartingColumn(), getStartingRow(), goalCol, goalRow);
 	}
 
 	@Override
@@ -214,9 +232,49 @@ public class TileLevel implements Level {
 
 	@Override
 	public boolean isPlaceDeadly(int column, int row) {
-			return  (!checkLevelBounds(column, row) ||
-					 tileAt(column, row).isLethal() ||
-				 	 theMonster.getColumn() == column && theMonster.getRow() == row);
+		return  (!checkLevelBounds(column, row) ||
+				tileAt(column, row).isLethal() ||
+				theMonster.getColumn() == column && theMonster.getRow() == row);
 	}
 
+	@Override
+	public boolean equals(Object obj){
+		if(null == obj) return false;
+		if(obj instanceof TileLevel){
+			TileLevel tl = (TileLevel) obj;
+			return Arrays.deepEquals(tl.map, this.map)    &&
+					tl.theMonster.equals(this.theMonster) && /* TODO: Her må dere nok sjekke om hashen er korrekt */
+					tl.height   == this.height            &&
+					tl.width    == this.width             &&
+					tl.startCol == this.startCol          &&
+					tl.goalCol  == this.goalCol           &&
+					tl.startRow == this.startRow          &&
+					tl.goalRow  == this.goalRow;
+
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode(){
+		int hash = 17851; /* Et primtall fra en liste som ble funnet vha. google */
+		hash = hash * 31 + theMonster.hashCode(); /* TODO: Dere må fikse denne hashen */
+		int mapHash = 19;
+		for(Tile[] row : map){
+			mapHash = mapHash * 31 + Arrays.hashCode(row);
+		}
+		hash = hash * 31 + mapHash;
+		hash = hash * 31 + hashInteger(height);
+		hash = hash * 31 + hashInteger(width);
+		hash = hash * 31 + hashInteger(startCol);
+		hash = hash * 31 + hashInteger(goalCol);
+		hash = hash * 31 + hashInteger(startRow);
+		hash = hash * 31 + hashInteger(goalRow);
+		return hash * 31;		
+	}
+
+	@Override
+	public void removeMonsters() {
+		/* TODO: Fiks denne. Akkurat nå gjør den ingenting fordi det bare er et monster og det er et eksempelmonster. */
+	}
 }

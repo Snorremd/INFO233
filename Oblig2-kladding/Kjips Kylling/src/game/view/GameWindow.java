@@ -3,25 +3,36 @@ package game.view;
 import game.entity.types.Level;
 import game.entity.types.Player;
 import game.gfx.Lerret;
-import game.gfx.LerretFactory;
 import game.input.SimpleKeyboard;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+/**
+ * Vinduet som vises når dere spiller spillet. Det er her lerretet bor.
+ * Hvis dere vil ha ting som skal vises til høyre 
+ * (til dømes tid som er igjen, eller om dere vil implementere items eller noe,
+ * er dette stedet å gjøre det på.)
+ *
+ * To instanser anses å være like hviss de er samme instans, så equals og hashCode er ikke overkjørt.
+ * 
+ * @author Haakon Løtveit (haakon.lotveit@student.uib.no)
+ *
+ */
 public class GameWindow extends JFrame {
 	/**
 	 * autogennet
 	 */
 	private static final long serialVersionUID = 4499966461488101017L;
 	private static final String TITLE = "Kjip's Challenge";
-	
-	private LerretFactory lerretLeverandør;
+	private SimpleKeyboard keyboard;
+	private Player player;
 	private Lerret lerret;
 	
 	public GameWindow(SimpleKeyboard keyboard, Player player){
 		super(TITLE);
-		lerretLeverandør = new LerretFactory().keyboard(keyboard).player(player);
+		this.keyboard = keyboard;
+		this.player = player;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
 		
@@ -29,7 +40,7 @@ public class GameWindow extends JFrame {
 	
 	public void loadLevel(Level level){
 		if(null == lerret){
-			this.lerret = lerretLeverandør.level(level).create();
+			this.lerret = new Lerret(level, player, keyboard);
 			this.add(lerret);
 			this.pack();
 			this.setVisible(true);
@@ -53,13 +64,13 @@ public class GameWindow extends JFrame {
 	 * TODO: Selv om disse popupene virker, burde en ha bedre tekst.
 	 */
 	public void popupVictory() {
-		JOptionPane.showMessageDialog(this, "DU HAR VUNNET", "SEIER!", JOptionPane.INFORMATION_MESSAGE);		
+		popupGeneric("Ferdig!", "Brett klart");
 	}
 	
 	public void popupGameComplete() {
-		JOptionPane.showMessageDialog(this, "Spill rundet", "Ferdig!", JOptionPane.INFORMATION_MESSAGE);
+		popupGeneric("Spill rundet", "Ferdig!");
 	}
-	
+
 	public void popupGeneric(String title, String message){
 		JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
 	}

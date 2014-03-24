@@ -9,6 +9,15 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 
+/**
+ * Dette er en viktig del av grafikkmotoren.
+ * Den er lerretet som ting blir malt på.
+ * 
+ * Siden to lerret er equals hvis og bare hvis de er samme lerret, er det ikke overkjørt hverken hashCode eller equals
+ * 
+ * @author Haakon Løtveit (haakon.lotveit@student.uib.no)
+ *
+ */
 public class Lerret extends Canvas {
 
 	/**

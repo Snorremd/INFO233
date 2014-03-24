@@ -1,7 +1,6 @@
-package game.entity;
+package game.entity.tiles;
 
-import game.entity.tiles.IllegalTileException;
-import game.entity.tiles.TileBuilder;
+import game.entity.TileLevel;
 import game.entity.types.Tile;
 import game.gfx.SpriteLoader;
 
@@ -9,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,20 +17,26 @@ import java.util.Set;
 
 import au.com.bytecode.opencsv.CSVReader;
 
+/**
+ * Dette er en factory som produserer tiles.
+ * Det gjør det lett for til dømes {@link TileLevel} å produsere brett.
+ * Slik den er nå har den hjelpemetoder for CSV-filer, men ingenting for SQL.
+ * Det kan være verdt å lage hjelpemetoder for {@link ResultSet} typen eller lignende.
+ * Men det er opp til dere.
+ * 
+ * @author Haakon Løtveit (haakon.lotveit@student.uib.no)
+ *
+ */
 public class TileFactory {
 	private SpriteLoader sprites;
 
-	/* TODO: Fjern interne kommentarer før utlevering.
-	 * Dette ser ekkelt ut, men alternativet er vel en Map<String, TileConfiguration>
-	 * der TileConfiguration har en metode ala create() : Tile eller noe
-	 * Er ikke helt sikker på beste måten å ha dette på. En database kanskje?
-	 */
 	private Set<String> names;
 	private Map<String, Boolean> walkable;
 	private Map<String, Boolean> lethal;
-	private Map<String, Integer> column; // kolonne i spritesheet, ikke plassering
+	private Map<String, Integer> column; // kolonne i spritesheet, ingenting med plassering på et brett å gjøre
 	private Map<String, Integer> row;    // også per spritesheet. 
 	private Map<Character, String>  alias;
+	private TileBuilder builder;
 
 	private void init(){
 		names    = new HashSet<>();
@@ -39,8 +45,9 @@ public class TileFactory {
 		column   = new HashMap<>();
 		row      = new HashMap<>();
 		alias    = new HashMap<>();
+		builder  = new TileBuilder();
 	}
-	
+
 	/**
 	 * Lager en ny tilefactory, basert på en spesifikk spriteloader.
 	 * @param sprites spriteloaderen som skal brukes.
@@ -60,16 +67,16 @@ public class TileFactory {
 	 */
 	public boolean registerAlias(Character letter, String aliasFor) throws TileNotRegisteredException {
 		if(!names.contains(aliasFor)) throw new TileNotRegisteredException("Cannot alias a tile that does not yet exist");		
-		
+
 		if(alias.containsKey(letter)){
 			return false;
 		}
-			
+
 		System.out.printf("[INFO] Aliasing %s to %s%n", letter, aliasFor);
 		alias.put(letter, aliasFor);
 		return true;
 	}
-	
+
 	/**
 	 * En hjelpermetode som registrerer mange tegn, basert på det en får ut av {@link CSVReader#readAll()};
 	 * @param csvs en liste av arrays av strenger.
@@ -77,14 +84,14 @@ public class TileFactory {
 	 */
 	public boolean registerTile(List<String[]> csvs){
 		boolean retval = true;
-		
+
 		for(String[] csv : csvs){
 			retval &= this.registerTile(csv);
 		}
-		
+
 		return retval;
 	}
-	
+
 	/**
 	 * En hjelpemetode som registrerer et tegn, basert på det en får ut av {@link CSVReader#readNext()}
 	 * @param csv String-arrayet som brukes
@@ -98,9 +105,9 @@ public class TileFactory {
 		names.add(name);
 
 		this.walkable.put(name, Boolean.parseBoolean(csv[1]));
-		this.lethal.put(name, Boolean.parseBoolean(csv[3]));
-		this.column.put(name, Integer.parseInt(csv[4]));
-		this.row.put(name, Integer.parseInt(csv[5]));
+		this.lethal.put(name, Boolean.parseBoolean(csv[2]));
+		this.column.put(name, Integer.parseInt(csv[3]));
+		this.row.put(name, Integer.parseInt(csv[4]));
 
 		System.out.printf("[INFO] Registered tile %s%n", name);
 		return true;
@@ -109,31 +116,31 @@ public class TileFactory {
 	/**
 	 * Lager en ny (statisk) tile basert på data som er registrert.
 	 * @param name Navnet på tilen
-	 * @param x x-posisjonen til tilen (ikke piksler, men type rad/kolonner)
-	 * @param y y-posisjonen til tilen (ikke piksler, men type rad/kolonner)
+	 * @param column x-posisjonen til tilen (ikke piksler, men type rad/kolonner)
+	 * @param row y-posisjonen til tilen (ikke piksler, men type rad/kolonner)
 	 * @return en ny tile, satt til gitt posisjon.
 	 * @throws TileNotRegisteredException dersom ingen tile med det navnet er gitt.
 	 * @throws IllegalTileException dersom de registrerte dataene er ulovlige.
 	 */
-	public Tile make(String name, int x, int y) throws TileNotRegisteredException {
+	public Tile make(String name, int column, int row) throws TileNotRegisteredException {
 		if(!names.contains(name)){
 			String error = String.format("Tile \"%s\" is not registered in database. Have you loaded all data correctly?", name);
 			throw new TileNotRegisteredException(error);
 		}
 
 		/*
-		 *  Dette er forhåpentligvis litt letere å holde orden på
+		 *  Dette er forhåpentligvis litt lettere å holde orden på
 		 *  Enn å måtte lese gjennom en lang ugjennomtrengelig  masse av et kall til new StaticTile
 		 */
-		return new TileBuilder()
-			.col(x)
-			.row(y)
-			.spriteX(row.get(name))
-			.spriteY(column.get(name))
-			.spriteloader(sprites)
-			.walkable(walkable.get(name))
-			.lethal(lethal.get(name))
-			.create();
+		return builder
+				.col(column)
+				.row(row)
+				.spriteX(this.row.get(name))
+				.spriteY(this.column.get(name))
+				.spriteloader(this.sprites)
+				.walkable(this.walkable.get(name))
+				.lethal(this.lethal.get(name))
+				.create();
 	}
 
 	/**
@@ -175,17 +182,17 @@ public class TileFactory {
 					System.err.printf("[ERROR] %s is not a single character. Skipping.%n", line[0]);
 					continue;
 				}
-				
+
 				Character c = line[0].charAt(0);
 				String name = line[1];
-				
+
 				success &= registerAlias(c, name);
-				
+
 			}
 		}
-		
+
 		return success;
-		
+
 	}
 
 	/**
@@ -209,5 +216,36 @@ public class TileFactory {
 	 */
 	public int tilesize() {
 		return sprites.tilesize();
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(null == obj) return false;
+		if(obj instanceof TileFactory){
+			TileFactory tf = (TileFactory) obj;
+			return this.sprites.equals(tf.sprites) &&
+				   this.names.equals(tf.names) &&
+				   this.walkable.equals(tf.walkable) &&
+				   this.lethal.equals(tf.lethal) &&
+				   this.column.equals(tf.column) &&
+				   this.row.equals(tf.row) &&
+				   this.alias.equals(tf.alias) &&
+				   this.builder.equals(tf.builder);
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode(){
+		int hashCode = 22699;
+		hashCode = hashCode * 31 + sprites.hashCode();
+		hashCode = hashCode * 31 + names.hashCode();
+		hashCode = hashCode * 31 + walkable.hashCode();
+		hashCode = hashCode * 31 + lethal.hashCode();
+		hashCode = hashCode * 31 + column.hashCode();
+		hashCode = hashCode * 31 + row.hashCode();
+		hashCode = hashCode * 31 + alias.hashCode();
+		hashCode = hashCode * 31 + builder.hashCode();
+		return hashCode * 31;
 	}
 }

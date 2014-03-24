@@ -3,6 +3,9 @@ package game.gfx;
 /**
  * En enkel tråd som prøver å male 60 bilder i sekunder.
  * (Dvs. maks 60 FPS)
+ * 
+ * Siden to PaintingThread objekter er like hvis og bare hvis de er samme objektet overkjøres hverken equal eller hashCode
+ *  
  * @author Haakon Løtveit (haakon.lotveit@student.uib.no)
  *
  */
