@@ -1,7 +1,6 @@
 package game.entity.tiles;
 
-import game.gfx.SpriteLoader;
-
+import game.view.gfx.SpriteLoader;
 import static game.util.EffectiveJavaHasher.*;
 
 /**

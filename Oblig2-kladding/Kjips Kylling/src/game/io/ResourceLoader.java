@@ -1,8 +1,8 @@
-package game.util;
+package game.io;
 
 import game.entity.tiles.TileFactory;
 import game.entity.types.Level;
-import game.gfx.SpriteLoader;
+import game.view.gfx.SpriteLoader;
 
 public interface ResourceLoader {
 	/**

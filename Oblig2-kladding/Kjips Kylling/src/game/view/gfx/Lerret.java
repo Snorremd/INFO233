@@ -1,8 +1,8 @@
-package game.gfx;
+package game.view.gfx;
 
+import game.controller.input.SimpleKeyboard;
 import game.entity.types.Level;
 import game.entity.types.Player;
-import game.input.SimpleKeyboard;
 
 import java.awt.Canvas;
 import java.awt.Dimension;

@@ -1,4 +1,4 @@
-package game.gfx;
+package game.view.gfx;
 
 /**
  * En enkel tråd som prøver å male 60 bilder i sekunder.

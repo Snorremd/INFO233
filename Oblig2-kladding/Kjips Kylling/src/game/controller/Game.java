@@ -1,14 +1,14 @@
 package game.controller;
 
+import game.controller.input.SimpleKeyboard;
 import game.entity.SimplePlayer;
 import game.entity.types.Level;
 import game.entity.types.Player;
-import game.input.SimpleKeyboard;
-import game.util.BuildLevelException;
+import game.io.BuildLevelException;
+import game.io.LevelNotFoundException;
+import game.io.ResourceLoader;
+import game.io.SpriteSheetNotFoundException;
 import game.util.Direction;
-import game.util.LevelNotFoundException;
-import game.util.ResourceLoader;
-import game.util.SpriteSheetNotFoundException;
 import game.view.GameWindow;
 
 /**

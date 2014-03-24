@@ -2,9 +2,9 @@ package game.entity;
 
 import game.entity.types.Level;
 import game.entity.types.Player;
-import game.gfx.SpriteLoader;
 import game.util.Direction;
 import game.util.Mover;
+import game.view.gfx.SpriteLoader;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;

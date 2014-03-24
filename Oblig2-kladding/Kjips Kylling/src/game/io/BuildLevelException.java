@@ -1,4 +1,4 @@
-package game.util;
+package game.io;
 
 public class BuildLevelException extends Exception {
 

@@ -1,4 +1,4 @@
-package game.input;
+package game.controller.input;
 
 import game.controller.Game;
 import game.util.Direction;

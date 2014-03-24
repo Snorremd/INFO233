@@ -2,7 +2,7 @@ package game.entity.tiles;
 
 import game.entity.TileLevel;
 import game.entity.types.Tile;
-import game.gfx.SpriteLoader;
+import game.view.gfx.SpriteLoader;
 
 import java.io.File;
 import java.io.FileNotFoundException;

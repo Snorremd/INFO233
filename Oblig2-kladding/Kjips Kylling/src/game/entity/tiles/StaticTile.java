@@ -3,12 +3,11 @@ package game.entity.tiles;
 import java.awt.Graphics;
 
 import static game.util.EffectiveJavaHasher.*;
-
 import game.entity.types.Level;
 import game.entity.types.Tile;
-import game.gfx.SpriteLoader;
 import game.util.Direction;
 import game.util.Mover;
+import game.view.gfx.SpriteLoader;
 
 /**
  * En enkel tile i et brett.

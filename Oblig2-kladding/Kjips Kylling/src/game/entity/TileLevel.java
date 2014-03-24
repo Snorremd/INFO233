@@ -1,5 +1,7 @@
 package game.entity;
 
+import static game.util.EffectiveJavaHasher.hashInteger;
+import game.entity.monster.ExampleMonster;
 import game.entity.tiles.AliasNotRegisteredException;
 import game.entity.tiles.TileFactory;
 import game.entity.tiles.TileNotRegisteredException;
@@ -7,9 +9,8 @@ import game.entity.types.Level;
 import game.entity.types.Monster;
 import game.entity.types.Player;
 import game.entity.types.Tile;
-import game.gfx.SpriteLoader;
-import game.monster.ExampleMonster;
 import game.util.Direction;
+import game.view.gfx.SpriteLoader;
 
 import java.awt.Graphics;
 import java.io.File;
@@ -17,8 +18,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
-
-import static game.util.EffectiveJavaHasher.*;
 
 /**
  * En standard implementasjon av et todimensjonalt brett.

@@ -1,10 +1,10 @@
-package game.util;
+package game.io;
 
 import game.entity.TileLevel;
 import game.entity.tiles.AliasNotRegisteredException;
 import game.entity.tiles.TileFactory;
 import game.entity.tiles.TileNotRegisteredException;
-import game.gfx.SpriteLoader;
+import game.view.gfx.SpriteLoader;
 
 import java.io.File;
 import java.io.FileNotFoundException;

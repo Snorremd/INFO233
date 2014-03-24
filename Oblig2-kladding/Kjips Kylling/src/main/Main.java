@@ -1,8 +1,8 @@
 package main;
 
 import game.controller.Game;
-import game.util.ResourceLoader;
-import game.util.ResourceLoaderCSV;
+import game.io.ResourceLoader;
+import game.io.ResourceLoaderCSV;
 
 public class Main {
 	

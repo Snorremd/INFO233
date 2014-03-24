@@ -1,4 +1,4 @@
-package game.gfx;
+package game.view.gfx;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;

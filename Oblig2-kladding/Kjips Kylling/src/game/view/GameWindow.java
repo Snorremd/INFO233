@@ -1,9 +1,9 @@
 package game.view;
 
+import game.controller.input.SimpleKeyboard;
 import game.entity.types.Level;
 import game.entity.types.Player;
-import game.gfx.Lerret;
-import game.input.SimpleKeyboard;
+import game.view.gfx.Lerret;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
