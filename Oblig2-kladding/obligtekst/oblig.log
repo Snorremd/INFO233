@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.1.19)  25 MAR 2014 10:58
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.1.19)  25 MAR 2014 14:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -367,25 +367,59 @@ Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
 (/usr/share/texlive/texmf-dist/tex/latex/base/t1enc.def
 File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding T1 on input line 43.
+))
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/graphics.cfg
+File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+
+(/usr/share/texlive/texmf-dist/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+\Gread@gobject=\count97
+))
+\Gin@req@height=\dimen107
+\Gin@req@width=\dimen108
+)
+(/usr/share/texlive/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2013/05/16 v3.9f The Babel package
+
+(/usr/share/texlive/texmf-dist/tex/generic/babel-norsk/norsk.ldf
+Language: norsk 2012/08/06 v2.0i Norsk support from the babel system
+
+(/usr/share/texlive/texmf-dist/tex/generic/babel/babel.def
+File: babel.def 2013/05/16 v3.9f Babel common definitions
+\babel@savecnt=\count98
+\U@D=\dimen109
+)
+Package babel Info: Making " an active character on input line 113.
 )) (./oblig.aux)
 \openout1 = `oblig.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 9.
-LaTeX Font Info:    ... okay on input line 9.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 9.
-LaTeX Font Info:    ... okay on input line 9.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 9.
-LaTeX Font Info:    ... okay on input line 9.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 9.
-LaTeX Font Info:    ... okay on input line 9.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 9.
-LaTeX Font Info:    ... okay on input line 9.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 9.
-LaTeX Font Info:    ... okay on input line 9.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 9.
-LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
 \AtBeginShipoutBox=\box26
-Package hyperref Info: Link coloring OFF on input line 9.
+Package hyperref Info: Link coloring OFF on input line 11.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -393,56 +427,91 @@ Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count97
+\c@section@level=\count99
 )
-LaTeX Info: Redefining \ref on input line 9.
-LaTeX Info: Redefining \pageref on input line 9.
-LaTeX Info: Redefining \nameref on input line 9.
+LaTeX Info: Redefining \ref on input line 11.
+LaTeX Info: Redefining \pageref on input line 11.
+LaTeX Info: Redefining \nameref on input line 11.
 
 (./oblig.out) (./oblig.out)
 \@outlinefile=\write3
 \openout3 = `oblig.out'.
 
+
+(/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count100
+\scratchdimen=\dimen110
+\scratchbox=\box27
+\nofMPsegments=\count101
+\nofMParguments=\count102
+\everyMPshowfont=\toks17
+\MPscratchCnt=\count103
+\MPscratchDim=\dimen111
+\MPnumerator=\count104
+\makeMPintoPDFobject=\count105
+\everyMPtoPDFconversion=\toks18
+) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
+
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
+)
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 452.
+
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+<slik-ser-det-ut.png, id=68, 792.9625pt x 549.05125pt>
+File: slik-ser-det-ut.png Graphic file (type png)
+
+<use slik-ser-det-ut.png>
+Package pdftex.def Info: slik-ser-det-ut.png used on input line 24.
+(pdftex.def)             Requested size: 345.0pt x 238.88564pt.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 23.
+(Font)              <7> on input line 31.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 23.
+(Font)              <5> on input line 31.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 23.
+(Font)              <8> on input line 31.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 23.
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 23.
+(Font)              <6> on input line 31.
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 31.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 47.
+) [1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./slik-ser-det-ut.png>]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 55.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 47.
- [1
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 55.
+ [2] [3]
+<Mulig-HighScore.png, id=113, 164.615pt x 144.54pt>
+File: Mulig-HighScore.png Graphic file (type png)
+ <use Mulig-HighScore.png>
+Package pdftex.def Info: Mulig-HighScore.png used on input line 122.
+(pdftex.def)             Requested size: 172.5pt x 151.46709pt.
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (7.69165pt too wide) in paragraph at lines 70--74
-\T1/cmr/m/n/10 Skal røre: game.view.GameWindow, game.controller.Game, game.enti
-ty.TileLevel 
- []
-
-[2]
-Underfull \hbox (badness 10000) in paragraph at lines 80--83
+Underfull \hbox (badness 10000) in paragraph at lines 130--134
 
  []
 
-[3]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 131.
- [4]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 131.
+[4 <./Mulig-HighScore.png>] [5]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 182.
+ [6]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 182.
  (./oblig.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 131.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 131.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 182.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 182.
 
 
 Package rerunfilecheck Warning: File `oblig.out' has changed.
@@ -450,35 +519,39 @@ Package rerunfilecheck Warning: File `oblig.out' has changed.
 (rerunfilecheck)                or use package `bookmark'.
 
 Package rerunfilecheck Info: Checksums for `oblig.out':
-(rerunfilecheck)             Before: 152D7F29E9B09F06BD13B9A44673B867;588
-(rerunfilecheck)             After:  717E1B418F0E5BA295038FE4105C189D;759.
+(rerunfilecheck)             Before: 39AF5013B9A0DFCEE6F2D92FFF78D163;905
+(rerunfilecheck)             After:  84826F0C1B8840EE819E657B531239BB;846.
 
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 131.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 182.
  ) 
 Here is how much of TeX's memory you used:
- 4717 strings out of 493307
- 68419 string characters out of 6139905
- 146832 words of memory out of 5000000
- 8137 multiletter control sequences out of 15000+600000
+ 5969 strings out of 493307
+ 85356 string characters out of 6139905
+ 171033 words of memory out of 5000000
+ 9326 multiletter control sequences out of 15000+600000
  13695 words of font info for 32 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 29i,8n,28p,539b,389s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf/fonts/
-type1/public/cm-super/sfbx1000.pfb></usr/share/texmf/fonts/type1/public/cm-supe
-r/sfbx1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1440.pfb></usr
-/share/texmf/fonts/type1/public/cm-super/sfrm0600.pfb></usr/share/texmf/fonts/t
-ype1/public/cm-super/sfrm0700.pfb></usr/share/texmf/fonts/type1/public/cm-super
-/sfrm0800.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1000.pfb></usr/
-share/texmf/fonts/type1/public/cm-super/sfti1000.pfb></usr/share/texmf/fonts/ty
-pe1/public/cm-super/sftt0800.pfb></usr/share/texmf/fonts/type1/public/cm-super/
-sftt1000.pfb>
-Output written on oblig.pdf (4 pages, 218385 bytes).
+ 29i,8n,28p,581b,416s stack positions out of 5000i,500n,10000p,200000b,80000s
+pdfTeX warning (dest): name{subsection.5.3} has been referenced but does not 
+exist, replaced by a fixed one
+
+{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/texlive/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf/fonts/type1/public/cm-
+super/sfbx1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1200.pfb><
+/usr/share/texmf/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf/fon
+ts/type1/public/cm-super/sfrm0600.pfb></usr/share/texmf/fonts/type1/public/cm-s
+uper/sfrm0700.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm0800.pfb></
+usr/share/texmf/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf/font
+s/type1/public/cm-super/sfti1000.pfb></usr/share/texmf/fonts/type1/public/cm-su
+per/sftt0800.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1000.pfb>
+Output written on oblig.pdf (6 pages, 321967 bytes).
 PDF statistics:
- 140 PDF objects out of 1000 (max. 8388607)
- 121 compressed objects within 2 object streams
- 26 named destinations out of 1000 (max. 500000)
- 89 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 204 PDF objects out of 1000 (max. 8388607)
+ 177 compressed objects within 2 object streams
+ 45 named destinations out of 1000 (max. 500000)
+ 139 words of extra memory for PDF output out of 10000 (max. 10000000)
 

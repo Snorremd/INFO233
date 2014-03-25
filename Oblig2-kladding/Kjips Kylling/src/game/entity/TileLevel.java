@@ -188,13 +188,12 @@ public class TileLevel implements Level {
 
 	@Override
 	public int tileRows() {
-		return map.length;
+		return this.height;
 	}
 
 	@Override
 	public int tileColumns() {
-		/* antagelsen her er at kartet er firkantet. Det er også antatt i loadFromFile-metoden. */
-		return map.length > 0? map[0].length : 0;
+		return this.width;
 	}
 
 	@Override

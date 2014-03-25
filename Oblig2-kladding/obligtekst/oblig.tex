@@ -1,9 +1,11 @@
 % PREAMBLE
 
-\documentclass{article}
+\documentclass[norsk]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
 \usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage[norsk]{babel}
 
 % DOCUMENT
 \begin{document}
@@ -16,6 +18,12 @@ Etc. Antar det er samme format som forrige gang, med godkjent, ikke godkjent?
 Godtar vi parprogrammering?
 
 Leveringsformatet er et Eclipseprosjekt, eksportert til en komprimert fil. (En av: zip, tgz eller tar.gz. Rar-filer godtas ikke.) % Vi kan per lov ikke kommunisere i proprietære formater som rar.
+Merk at prosjektet dere får utlevert er i UTF-8. Dere bør derfor etter å ha importert det, sjekke filformatet. Det gjør dere ved å høyreklikke på prosjektmappen, velge properties, og passe på at det ser ut som dette:
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=1\textwidth]{slik-ser-det-ut.png}
+\end{figure}
+
 
 
 \section{Oppgaven}
@@ -49,6 +57,7 @@ Koden er lagt opp etter MVC-mønsteret. Det betyr at koden er en av tre ting.
 \item Til slutt kan den også være en del av presentasjonen\footnote{Og dette ligger i game.view} av programmet.
 \end{itemize}
 I tillegg er det IO-pakker som leser fra disk, snakker med andre programmer, etc.
+Her ligger ResourceLoader og implementasjoner, som abstraherer innlasting av ressurser.
 
 Koden som dere får er sortert under forskjellige pakker, som følger:
 \begin{description}
@@ -67,34 +76,77 @@ Koden som dere får er sortert under forskjellige pakker, som følger:
 \item [game.main] Inneholder utelukkende Main, en classe som er inngangspunktet\footnote{entry-point} for programmet. Det er bare denne klassen i koden dere får som har en main-metode.
 \end{description}
 
-TODO: Få dette renskrevet og inn ordentlig: \\
-En kan også dele koden opp i kode dere skal modifisere, og resten.\\
-Skal røre: game.view.GameWindow, game.controller.Game, game.entity.TileLevel \\
-Skal lage: game.io.ResourceLoaderSQL, game.entity.monster.{OppNed TilVenstre TilHøyre, VenstreHøyre, Målsøkende, Patrulje}Monster
-    
+%TODO: Få dette renskrevet og inn ordentlig: \\
+%Dere skal redigere  game.view.GameWindow, game.controller.Game og game.entity.TileLevel. \\
+%Skal lage: game.io.ResourceLoaderSQL og flere monstre i pakken game.entity.monster.\\
+%Det er TODO annotasjoner i relevante kodebiter.   
 \section{Oppgaven}
-% -- Hvor de skal sette inn kode % Er vel dekket i forrige?
-Oppgaven dere skal gjøre kan deles inn i to hoveddeler: Databasebruk og Monstre. I tillegg er det noen underting som også skal legges til etterpå.
+Oppgaven dere skal gjøre kan deles inn i to hoveddeler: Databasebruk og Monstre. Det er også noen ekstrating dere skal gjøre.
+
 \subsection{Utvidelse til bruk av SQL}
 \label{subsec:sqloppgave}
-TODO: Renskriving: \\
-ResourceLoaderSQL skal lages. \\
-HighScore tabell skal lagres, og når du kommer i mål skal den skrives ut, med spilleren sin plassering vist. \\
+Dere skal bruke databaser i dette spillet, nærmere bestemt Apache Derby, som kjører som en del av programmet deres, så dere slipper å tenke på innlogging og slikt. % Som VPN for å bruke MySQL serverene til UiB.
+Bibliotekene dere trenger kommer med prosjektet, og er lagt til under lib/ mappen, og satt opp i prosjektet.
+
+\subsubsection{ResourceLoaderSQL}
+\label{subsec:resourceloadersql}
+Prosjektet har en kontrakt ResourceLoader som beskriver hvordan en klasse kan holdes ansvarlig for å laste inn ressurser fra disk,
+som blir implementert av klassen ResourceLoaderCSV.
+ResourceLoaderCSV leser dataene fra 4 spesifikke .csv\footnote{CSV - Comma Separated Values} filer og henter inn data derfra.
+Vi vil at dere skal implementere en ny klasse ResourceLoaderSQL som bruker en SQL basert database til å hente ut data fra.
+For at dette må til bør dere gjøre følgende
+\begin{enumerate}
+\item Se igjennom .csv filene. Dere kan åpne dem i teksteditorer som Vim og Emacs, eller regneark som MS Excel eller LibreOffice Calc.
+\item Finn ut av hva datatypene er, og hvordan disse kan overføres til SQL.
+\item Finn ut av hva relasjonene er, og hvordan disse blir vedlikeholdt.\footnote{For eksempel, se på alias.csv og standard-tiles.csv}
+\item Når dere nå har modellert en database, da, og først da bør dere skrive koden.
+\item Og når dere har skrevet koden, sjekk at den virker.
+\item Så kan dere begynne å legge dataene inn i databasen.
+\item Og nå når dataene er i databasen, og dere vet at den virker, da bør dere skrive ResourceLoaderSQL klassen.
+\item Nest sist, bytt ut ResourceLoader loader = new ResourceLoaderCSV(); med ResourceLoader loader = new ResourceLoaderSQL();
+\item Til slutt, fiks alle feil som kommer.
+\end{enumerate}
+
+Det er noen viktige ufravikelige krav til ResourceLoaderSQL:
+Når dere starter opp spillet skal alle data som trengs fra databasen lastes inn med en gang. Dere må derfor mellomlagre data slik at dere slipper å laste inn på nytt.
+Dere bør absolutt bruke Map\footnote{se \url{http://docs.oracle.com/javase/7/docs/api/java/util/Map.html}} til å holde på disse dataene, og se på hvordan ResourceLoaderCSV gjør det.
+%[Kommentar: Bør de hive over brettene og? Eller holder det å hive over det andre?]
+Dere trenger ikke å hive brettene over til SQL.
+
+\subsubsection{HighScore}
+\label{subsec:highscore}
+HighScore tabell skal lagres, og når du kommer i mål skal den skrives ut, med spilleren sin plassering vist.
+\begin{figure}[h!]
+  \caption{En mulig måte å vise highscore på. (Tatt fra SkiFree)}
+  \centering
+    \includegraphics[width=0.5\textwidth]{Mulig-HighScore.png}
+\end{figure}
+
+Score i denne sammenhengen er ikke mer komplisert enn antall tidels sekunder brukt, jo færre jo bedre.
+Dere må altså lage en ny tabell som holder orden på slikt, og spørringer for å hente ut informasjon.
 
 \subsection{Monstre}
-\label{subsec:monsteroppgave}
-Dere skal lage monstre som går snur seg når de treffer veggen, som er målsøkende og følger en patruljerute.
+\label{subsec:monster}
+I prosjektet nå er det kun et monster som går en tilfeldig retning. Dere skal lage flere av de klassiske monstrene.
+I tillegg til å designe klasser for monstre skal dere også legge til en måte å lagre monsterinformasjon på i databasen.
+Dere må både lage en tabell for monstertypene, og en som binder monstre til brett i en mange-til-mange-tabell. Denne mange-til-mange-tabellen må si hvilket monster det er snakk om, hvor på kartet den skal være og hvilket brett det er snakk om.
+Monstrene dere skal lage\footnote{Dere kan godt begynne med monstre, og putte dem inn i TileLevel istedenfor ExampleMonster. Se linje 119 i game.entity.TileLevel}\\
 
-\subsection{Til slutt}
-\label{subsec:ekstra}
-Alle brett skal ha en makstid, utvid brett med en maksimal tid de må fullføre et brett på. Hvis en spiller ikke er i mål når tiden går ut har han tapt.
-Når du har klart et brett, skal som er brukt lagres. En skal også vise en liste over de 10 høyeste poengsummene. Dersom spillerens tid e
+Monstrene dere skal lage er:
+\begin{description}
+\item [VenstreMonster] Dette monsteret går oppover til det treffer et hinder. Da snur det til venstre, og går den veien istedenfor.
+\item [HøyreMonster] Dette monsteret går oppover til det treffer et hinder. Da snur det til høyre og går den veien istedenfor.
+\item [OppNedMonster] Går opp til det treffer en hindring. Da går det ned til det treffer en hindring. Og slik fortsetter det.
+\item [VenstreHøyreMonster] Går til venstre til det treffer en hindring til det treffer en hindring. Når monsteret treffer en hindring snur det $180\,^{\circ}$ og går den veien istedenfor.
+\item [MålsøkendeMonster] Går alltid ett steg nærmere spilleren. Skal ikke planlegge en rute men bare gå den ruten som tar den nærmere spilleren.
+\item [PatruljeMonster] Følger en gitt patrulje. En patrulje er en streng med en av fire tegn i. N for nord, W for vest, E for øst og S for sør.\footnote{Siden resten av koden er på engelsk følger vi samme praksis her.} Når den har fulgt alle stegene i patruljen begynner den forfra igjen. En patrulje på ``NNEESSWW'' skal gå rundt i ring, for eksempel.
+\end{description}
 
--- Introduksjon til oppgaven
--- ResourceLoaderSQL (sql/maps!)
--- Highscores! (SQL)
--- Monstre (Kø! (Prioritetskø?))
-SELECT score, name from HighScoreWHERE level = ? ORDER BY DESC LIMIT 10;
+I tillegg til å lage en måte å representere monstre på i databasen, og å lage kode for dem, må dere utvide prosjektet til å ta hånd om disse monstrene.
+Spesifikt må dere utvide TileLevel til å holde på fler monstre, og å holde orden på hvor de er.
+I tillegg må dere ticke alle sammen. Når det bare er et monster er rekkefølgen  opplagt, men når det blir flere vil vi at dere skal la dem tickes etter prioritet.
+Det vil si, at dersom to monstre har forskjellig prioritet, skal den med høyest prioritet tickes først. Ellers er rekkefølgen uviktig.
+En god måte å gjøre dette på er en prioritetskø.
 
 \section{terminologi}
 \subsection{Game-loop}
@@ -114,12 +166,11 @@ Dersom du for eksempel får 4 ticks i sekundet kan ikke en AI reagere raskere en
 Bare fordi du får n ticks betyr ikke at en AI må bruke alle. Den kan utmerket godt kun bevege seg annenhver tick, eller sjeldnere.
 I vårt spill har alle klasser som implementerer Tickable-kontrakten en tick() metode som er void, og lar objekter av den klassen oppdatere seg selv når metoden blir kalt.
 
-\subsection{Sprit}e
+\subsection{Sprite}
 \label{subsec:sprite}
-En sprite er et mulig bilde av en entitet eller en del av en entitet i et spill.\footnote{I eldre spill som på den første Nintendoen, var det sterkte begrensede ressurser. En tok derfor å tegnet monstre og delte bilde opp i mindre deler, siden prosessoren på Nintendoen ikke kunne tegne hele bilde på en gang. En har siden utvidet teknikken slik at deler av en karakter som er logisk adskilte kan tegnes sammen, slik at du kan skyte av en arm fra et monster, etc. Vi bruker bare et bilde på en entitet.}
-For eksempel har monstrene i eksempelmonster fire sprites, og kan dermed se ut på fire forskjellige måter.
-En kan selvsagt gjøre ting mer komplisert (tenk på for eksempel animasjoner og slikt), men vi holder oss til enkle ting.
-
+En sprite er et mulig bilde av en entitet eller en del av en entitet i et spill.\footnote{På eldre maskiner som den første Nintendoen, var det sterkte begrensede ressurser. En fant ut at dersom en lastet inn flere bilder på en gang som ett stort bilde var det mye raskere for grafikkprosessoren. En kunne også veldig enkelt be om å kun tegne en bit av bildet. Tradisjonen med å samle bilder fra samme entitet på et sted ble da født. En kunne også modde for eksempel det første GTA spillet med å åpne opp spritesheets og tegne om på ting.}
+I Kjips Kylling er for eksempel spilleren som ser ned en sprite. Det er tre andre sprites som brukes om spillerfiguren, nemlig når den ser opp, til venstre eller til høyre.
+En gulveflis har bare en sprite, siden den ikke kan snu seg til venstre.
 \subsection{Spritesheet}
 \label{subsec:spritesheet}
 En spritesheet er en bildefil som inneholder mange sprites samlet i en fil. Ble opprinnelig brukt for å spare på systemressurser, og blir fortsatt brukt på internett av den grunn.

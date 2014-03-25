@@ -21,7 +21,6 @@ public class Main {
 		ResourceLoader loader = new ResourceLoaderCSV(); 
 		
 		Game game = new Game(loader);
-		
 		game.start();
 		
 		System.out.println("Spill over, avslutter");
