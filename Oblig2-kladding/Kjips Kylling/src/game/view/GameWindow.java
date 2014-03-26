@@ -47,6 +47,7 @@ public class GameWindow extends JFrame {
 		}
 		else{
 			lerret.setLevel(level);
+			this.pack();
 		}
 		
 	}

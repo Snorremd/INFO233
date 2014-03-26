@@ -2,28 +2,85 @@
 
 \documentclass[norsk]{article}
 \usepackage[utf8]{inputenc}
-\usepackage{hyperref}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
+\usepackage{float}
+\usepackage[sc]{mathpazo}
+\linespread{1.05}
+\usepackage{latexsym}
+\usepackage{hyperref}
+\tolerance=1000
+\usepackage[T1]{fontenc}
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.0in}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage[raggedright,bf,sf]{titlesec}
+\usepackage{fullpage}
+\usepackage{xcolor}
+\usepackage{listings}
+\renewcommand{\maketitle}{}
 \usepackage[norsk]{babel}
+
+\definecolor{lightgray}{gray}{0.95}
+\lstnewenvironment{code}[1][]%
+  {\minipage{\linewidth}
+\lstset{
+  language=,
+  keywordstyle=\bfseries,
+  captionpos=b,
+  backgroundcolor=\color{lightgray},
+  frame=shadowbox,
+  rulesepcolor=\color{gray},
+  basicstyle=\ttfamily\fontsize{10}{10}\selectfont,
+  aboveskip=20pt,
+  #1}}
+  {\endminipage}
 
 % DOCUMENT
 \begin{document}
-Obligatorisk oppgave info233, kladd.
 
-\section{Frister, etc.}
-\label{sec:frister-og-regler}
-Utlevert [dato], frist [data] klokken [klokkeslett]
-Etc. Antar det er samme format som forrige gang, med godkjent, ikke godkjent?
-Godtar vi parprogrammering?
+\maketitle
 
-Leveringsformatet er et Eclipseprosjekt, eksportert til en komprimert fil. (En av: zip, tgz eller tar.gz. Rar-filer godtas ikke.) % Vi kan per lov ikke kommunisere i proprietære formater som rar.
+\newcommand{\blankpage}{\newpage{}\thispagestyle{empty}\mbox{}\newpage{}}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\begin{titlepage}
+\begin{center}
+\includegraphics[width=8cm]{uib-emblem-svart} \\[0.5cm]
+\paragraph*{}
+
+\textsc{\Large Informasjonsvitenskap}\\[0.5cm]
+\Large INFO 233, Vår 2014\\[0.4cm]
+\HRule \\[0.4cm]
+{ \huge \bfseries Andre Obligatoriske oppgave}\\[0.5cm]
+\HRule \\[1.0cm]
+
+{\large \emph{Utlevert 18.mars 2014}}\\
+{\large \emph{Innleveringsfrist klokken 15.00, 7. mai 2014}}\\
+
+
+
+\paragraph*{}
+\end{center}
+\vfill
+\begin{center}
+\end{center}
+\end{titlepage}
+
+\blankpage
+
+\section{Regler}
+\label{sec:regler}
+Oppgaver vurderes til godkjent/ikke godkjent.\\
+Dere jobber enkeltvis eller i par.\\
+%brukernavn på fil og prosjektnavn.
+Leveringsformatet er et Eclipseprosjekt, eksportert til en komprimert fil. (En av: zip, tgz eller tar.gz. Rar-filer godtas ikke.)\\ % Vi kan per lov ikke kommunisere i proprietære formater som rar.
 Merk at prosjektet dere får utlevert er i UTF-8. Dere bør derfor etter å ha importert det, sjekke filformatet. Det gjør dere ved å høyreklikke på prosjektmappen, velge properties, og passe på at det ser ut som dette:
 \begin{figure}[h!]
   \centering
     \includegraphics[width=1\textwidth]{slik-ser-det-ut.png}
 \end{figure}
-
 
 
 \section{Oppgaven}
@@ -40,45 +97,54 @@ Husk å bruke tiden godt. Det er nok å gjøre, og mye blir lettere å gjøre hv
 Spillet Kjips Kylling består av flere brett, en spiller og monstre.
 Målet med spillet er å klare alle brettene.
 For å klare et brett må du komme deg fra begynnelsen på brettet til slutten.
-Dersom du går tom for tid, tar ani et monster, eller tråkker på en dødelig rute i spillet dør du.
+Dersom du går tom for tid, kommer borti et monster, eller tråkker på en dødelig rute i spillet dør du.
 Når du dør kan du prøve brettet på nytt.
 Brettet består av forskjellige ruter. Noen kan gås på, andre ikke. Noen er dødelige, andre ikke.
-Brettet har også forskjellige monstre. Disse monstrene beveger seg etter faste mønstre. Monstrene kan ikke dø i denne utgaven.\footnote{I originalen kunne du drepe et monster ved å lure det til å tråkke på en bombe.}
-Når du har nådd slutten på et brett begynner neste brett.
+Brettet har også forskjellige monstre. Disse monstrene beveger seg etter faste mønstre. Monstrene kan ikke dø i utgaven dere skal lage.\footnote{I originalen kunne du drepe et monster ved å lure det til å tråkke på en bombe.}
+Når du har nådd slutten på et brett begynner neste brett. Det følger med tre eksempelbrett, men dere står fritt til å lage fler.
+Se beskrivelse av filformatet i slutten av oppgaven for detaljer.\\
+Placeholder bilde \\
 
 \section{Om koden}
 \label{sec:om-koden}
+For å å få til deres versjon av spillet må dere utvide/endre kode som alt er laget og finnes tilgjengelig.
+Dere får denne koden, og må sørge for å legge den til i prosjektet. Husk å implementere interface der hvor slike er gitt, som for eksempel Monster-interfacet.
 \subsection{Introduksjon til kodebasen}
 \label{subsec:kodebase-intro}
-Koden er lagt opp etter MVC-mønsteret. Det betyr at koden er en av tre ting.
+Koden er lagt opp etter MVC-mønsteret. Det betyr at koden kan sies å være representert i tre lag:
 \begin{itemize}
-\item Den kan representere en bit av en modell\footnote{I spillet ligger disse klassene under game.entity, og dens underpakker}, dvs. forskjellige ting i programmet, som monstre, spilleren og slikt.
-\item Eller så kan den være en bit av en kontroller\footnote{Dette ligger i game.controller}, dvs. noe som styrer oppførsel i programmet
-\item Til slutt kan den også være en del av presentasjonen\footnote{Og dette ligger i game.view} av programmet.
+\item Ett lag som representerer modellene, dvs. forskjellige entiteter i spillet. I koden ligger dette i pakken game.entity
+\item Ett lag som representerer kontrollerene, dvs. kode som er ansvarlig for å binde modellen sammen med presentasjonen. Ligger i game.controller
+\item Til slutt ett lag som håndterer presentasjon av informasjonen i modellene. Ligger i game.view
 \end{itemize}
 I tillegg er det IO-pakker som leser fra disk, snakker med andre programmer, etc.
-Her ligger ResourceLoader og implementasjoner, som abstraherer innlasting av ressurser.
+Her ligger blant annet grensesnittet ResourceLoader med sine implementasjoner, ResourceLoader har ansvar for innlasting av ressurser som monstre, brett, ruter, grafikk etc.
 
 Koden som dere får er sortert under forskjellige pakker, som følger:
 \begin{description}
 \item [game.controller] Inneholder klassen \emph{Game}, som er en kontroller for spillet.
-  Her finner du blant annet en game-loop, som kjører kontinuerlig og som er ansvarlig for å gi ut \emph{ticks}.
+  Her finner du blant annet en game-loop, som kjører kontinuerlig og som er ansvarlig for å gi ut ticks. (Se seksjon \ref{subsec:tick}.)
 \item [game.controller.input] Er hvor input til spillet, som tastatur, mus, gamepads, osv. ligger. Koden dere får har kun en enkel tastaturklasse som tar hånd om input. Dere trenger ikke røre noe kode her inne.
-\item [game.entity] Har SimplePlayer som representerer en spiller, og TileLevel som representerer et brett. Andre klasser har egne pakker for å holde ting relativt oversiktlig.
+\item [game.entity] Har SimplePlayer som representerer en spiller, og TileLevel som representerer et brett.
 \item [game.entity.monster] Inneholder forskjellige monstre. Når dere får den inneholder den AbstractMonster som er et forenklet monster som ikke har tick() metoden sin implementert, og ExampleMonster som er et monster med alt implementert, slik at dere ser hvordan en kan gjøre det.
-\item [game.entity.tiles] Forskjellige klasser som representerer fliser, dvs. en del av brettet, samt hjelpeklasser for å gjøre ting enklere.
-\item [game.entity.types] De forskjellige typene entiteter. Her er kun kontrakter, og ikke noen implementerende klasser.
+\item [game.entity.tiles] Forskjellige klasser som representerer ruter (tiles), dvs. en del av brettet, samt hjelpeklasser for å gjøre ting enklere.
+  \begin{figure}[h!]
+    \caption{Et eksempel på en rute, på posisjon $(4,3)$. (4 er kolonnen, 3 er raden som ruten ligger i.)}
+    \centering
+    \includegraphics[width=1\textwidth]{eksempel-pa-brett.png}
+  \end{figure}
+\item [game.entity.types] De forskjellige typene entiteter. Her er kun interface, og ikke noen implementerende klasser.
 \item [game.io] Har klasser som snakker med disk og evt. andre programmer som en SQL-database.
 \item [game.util] Har forskjellige hjelpemetoder, som Direction for retninger, og Movement for hjelpemetoder til bevegelser.
-\item [game.view] Har GameWindow-klassen som er en JFrame som holder på et lerret.
+\item [game.view] Har GameWindow-klassen som er en JFrame som holder på et lerret\footnote{Canvas}. Et lerret er en klasse for å tegne til en flate, som for eksempel en JFrame.
   I tillegg til metoder for popups, kan du også legge til kode om du vil ha mer GUI.
 \item [game.view.gfx] Hvor grafikken blir tegnet. Det er også en klasse for å laste bildefiler inn til grafikkmotoren. Dere trenger ikke endre noe her. % Den ene klassen som kan være relevant å se nærmere på er SpriteLoader som er ansvarlig for å laste bildefiler til grafikksystemet.
-\item [game.main] Inneholder utelukkende Main, en classe som er inngangspunktet\footnote{entry-point} for programmet. Det er bare denne klassen i koden dere får som har en main-metode.
+\item [game.main] Inneholder utelukkende Main, en klasse som er inngangspunktet\footnote{entry-point} for programmet. Det er bare denne klassen i koden dere får som har en main-metode.
 \end{description}
 
 %TODO: Få dette renskrevet og inn ordentlig: \\
 %Dere skal redigere  game.view.GameWindow, game.controller.Game og game.entity.TileLevel. \\
-%Skal lage: game.io.ResourceLoaderSQL og flere monstre i pakken game.entity.monster.\\
+%Skal lage: game.io.ResourceLoaderSQL og i pakken game.entity.monster.\\
 %Det er TODO annotasjoner i relevante kodebiter.   
 \section{Oppgaven}
 Oppgaven dere skal gjøre kan deles inn i to hoveddeler: Databasebruk og Monstre. Det er også noen ekstrating dere skal gjøre.
@@ -90,7 +156,7 @@ Bibliotekene dere trenger kommer med prosjektet, og er lagt til under lib/ mappe
 
 \subsubsection{ResourceLoaderSQL}
 \label{subsec:resourceloadersql}
-Prosjektet har en kontrakt ResourceLoader som beskriver hvordan en klasse kan holdes ansvarlig for å laste inn ressurser fra disk,
+Prosjektet har et interface ResourceLoader som beskriver hvordan en klasse kan holdes ansvarlig for å laste inn ressurser fra disk,
 som blir implementert av klassen ResourceLoaderCSV.
 ResourceLoaderCSV leser dataene fra 4 spesifikke .csv\footnote{CSV - Comma Separated Values} filer og henter inn data derfra.
 Vi vil at dere skal implementere en ny klasse ResourceLoaderSQL som bruker en SQL basert database til å hente ut data fra.
@@ -108,10 +174,10 @@ For at dette må til bør dere gjøre følgende
 \end{enumerate}
 
 Det er noen viktige ufravikelige krav til ResourceLoaderSQL:
-Når dere starter opp spillet skal alle data som trengs fra databasen lastes inn med en gang. Dere må derfor mellomlagre data slik at dere slipper å laste inn på nytt.
+Når dere starter opp spillet skal alle data som trengs fra databasen lastes inn med en gang.
+Dere må derfor lagre data i kjøretidsminnet for å unngå at dataene må lastes på nytt.
 Dere bør absolutt bruke Map\footnote{se \url{http://docs.oracle.com/javase/7/docs/api/java/util/Map.html}} til å holde på disse dataene, og se på hvordan ResourceLoaderCSV gjør det.
-%[Kommentar: Bør de hive over brettene og? Eller holder det å hive over det andre?]
-Dere trenger ikke å hive brettene over til SQL.
+Dere trenger ikke å lagre brettene i relasjonsdatabasen, de kan lagres som tekstfiler slik de er nå. Bildene skal heller ikke ligge i databasen. (Se avsnittet om brettene \ref{subsec:filformat} for mer info.)
 
 \subsubsection{HighScore}
 \label{subsec:highscore}
@@ -123,7 +189,7 @@ HighScore tabell skal lagres, og når du kommer i mål skal den skrives ut, med 
 \end{figure}
 
 Score i denne sammenhengen er ikke mer komplisert enn antall tidels sekunder brukt, jo færre jo bedre.
-Dere må altså lage en ny tabell som holder orden på slikt, og spørringer for å hente ut informasjon.
+Dere må altså lage en ny databasetabell som holder orden på slikt, og tilhørende spørringer for å hente ut informasjon.
 
 \subsection{Monstre}
 \label{subsec:monster}
@@ -142,11 +208,18 @@ Monstrene dere skal lage er:
 \item [PatruljeMonster] Følger en gitt patrulje. En patrulje er en streng med en av fire tegn i. N for nord, W for vest, E for øst og S for sør.\footnote{Siden resten av koden er på engelsk følger vi samme praksis her.} Når den har fulgt alle stegene i patruljen begynner den forfra igjen. En patrulje på ``NNEESSWW'' skal gå rundt i ring, for eksempel.
 \end{description}
 
-I tillegg til å lage en måte å representere monstre på i databasen, og å lage kode for dem, må dere utvide prosjektet til å ta hånd om disse monstrene.
-Spesifikt må dere utvide TileLevel til å holde på fler monstre, og å holde orden på hvor de er.
-I tillegg må dere ticke alle sammen. Når det bare er et monster er rekkefølgen  opplagt, men når det blir flere vil vi at dere skal la dem tickes etter prioritet.
-Det vil si, at dersom to monstre har forskjellig prioritet, skal den med høyest prioritet tickes først. Ellers er rekkefølgen uviktig.
-En god måte å gjøre dette på er en prioritetskø.
+Dessuten skal dere lage en måte å representere monstre på i databasen, og dere utvide må utvide TileLevel til å behandle flere monstre på brettet.
+
+I tillegg må dere kalle metoden tick() på alle monstre i TileLevel.
+Når dere kaller tick() kan monstrene gjøre en handling.
+Tick blir kalt 120 ganger i sekundet.
+Dersom dere gjør noe ved hver mulighet, vil monstrene bevege seg altfor fort.
+Se eksempelmonster på en mulighet til å begrense hastigheten.
+Når dere kaller tick, skal monstrene bevege seg i prioritert rekkefølge.
+Det betyr at dersom du har to monstre med forskjellig prioritet, skal den med høyest prioritet gå først.
+Dersom de har samme prioritet betyr ikke rekkefølgen noe.
+
+Her bør dere bruke en prioritetskø\footnote{se \url{http://docs.oracle.com/javase/7/docs/api/java/util/PriorityQueue.html}}.
 
 \section{terminologi}
 \subsection{Game-loop}
@@ -161,10 +234,10 @@ Det er altså kun oppdatering som skjer i løkken, tegning skjer i en annen trå
 
 \subsection{Tick}
 \label{subsec:tick}
-Et tick er en sjanse til en skapning til å velge å gjøre en ting.
-Dersom du for eksempel får 4 ticks i sekundet kan ikke en AI reagere raskere enn 1/4 sekund.
-Bare fordi du får n ticks betyr ikke at en AI må bruke alle. Den kan utmerket godt kun bevege seg annenhver tick, eller sjeldnere.
-I vårt spill har alle klasser som implementerer Tickable-kontrakten en tick() metode som er void, og lar objekter av den klassen oppdatere seg selv når metoden blir kalt.
+Et tick er en sjanse for en skapning til å velge å gjøre en ting.
+Dersom du for eksempel får 4 ticks i sekundet kan ikke en AI\footnote{AI = kunstig intelligens. Se \url{http://no.wikipedia.org/wiki/Kunstig_intelligens}} reagere raskere enn 1/4 sekund.
+Bare fordi du får mange ticks betyr ikke at en AI må bruke alle. Den kan utmerket godt kun bevege seg annenhver tick, eller sjeldnere.
+I vårt spill har alle klasser som implementerer Tickable-interfacet en tick() metode som er void, og lar objekter av den klassen oppdatere seg selv når metoden blir kalt.
 
 \subsection{Sprite}
 \label{subsec:sprite}
@@ -179,4 +252,49 @@ Men dersom du samler alle de små bildene sammen i ett bilde og sender det, og d
 Vi som har såpass små bildefiler kunne utmerket godt sluppet unna med å ha separate bildefiler, men vi valgte å ha det med, fordi det er enklere å se hvordan bildene ser ut, mindre File objekter å skyfle rundt på, for å følge tradisjonen, og fordi det er greit å ha sett hvis du i fremtiden skal lage nettsider.
 Se \url{http://css-tricks.com/css-sprites/} hvis du lurer på hvordan det brukes i nettsider.
 
+\subsection{Filformater}
+\label{subsec:filformat}
+Dere trenger ikke røre hverken brettfiler eller spritesheets, men dere kan hvis dere vil. Her er derfor en oversikt over filformatene.
+\subsubsection{Spritesheets}
+\label{subsec:spritesheet-file-format}
+
+Det er fire forskjellige spritesheets i prosjektet, og ligger i undergruppen art/.
+\begin{description}
+\item [figur.png] Er spriten til hovedpersonen. Den er laget vha. \url{gaurav.munjal.us/Universal-LPC-Spritesheet-Character-Generator/}, og dere kan lage deres egen figur der.
+  Den har mange tilstander som kan brukes, men vi bruker bare fire av dem.
+  Dersom du lager en ny bildefil i siden du vil bruke, bør du først gi figur.png et nytt navn, og så gi den nye filen navnet figur.png etterpå.
+\item [Sara.png] Er maskoten til opengameart. Dere kan bruke den istedenfor figur.png hvis dere vil, da de har samme format.
+\item [monstre.png] Er en spritesheet med flere monstre på. Hvis dere vil modde monstrene til å se annerledes ut, kan dere redigere den filen.
+\item [tiles.png] Er spritesheeten for rutene på kartet. Endrer dere på dette bildet endrer dere hvordan flisene blir tegnet.
+\end{description}
+Tilesheets er forventet å legge under art/ undermappen. Selv om du kan registrere tilesheets andre steder, anbefales det sterkt at dere følger konvensjonen.
+\subsubsection{CSV-filene}
+\label{subsec:csv-filene}
+CSV er et filformat som forenklet sett beskriver en todimensjonal tabell.
+Hvert felt i en rad er adskilt med komma, med en mulig overskrift som beskriver tabellen.
+Dette er nok til å beskrive alle csv-filene i oppgaven.
+Hvis dere vil lese mer om CSV, kan dere se på\url{http://en.wikipedia.org/wiki/Comma-separated_values} for generell informasjon, og \url{http://tools.ietf.org/html/rfc4180} for en spesifikasjon.
+
+\begin{description}
+\item [adventure.csv]      beskriver hvilke brett som skal spilles, med rekkefølge, navn på brettet og til slutt hvor brettfilen finnes.
+\item [spritesheets.csv]   beskriver hvilke spritesheets som skal lastes inn, med deres navn, plassering av filen, og størrelsen på et bilde (tilesize) i piksler.
+\item [standard-tiles.csv] beskriver vanlige ruter i et brett, med navn, om spilleren skal kunne gå på dem, om spilleren dør om den betråkkes, og hvor i spritesheeten den er (kolonne og rad som to felt).
+\item [alias.csv]          beskriver aliaser, altså hvilke bokstaver som betegner hvilke ruter, med tegnet, og så navnet på ruten.
+\end{description}
+
+\subsubsection{Brettfilene}
+\label{subsec:brettfil}
+
+En brettfil er en vanlig tekstfil, og består av følgende:
+Først seks heltall på en linje.
+\begin{enumerate}
+\item Hvor mange kolonner som er i brettet
+\item Hvor mange rader som er i brettet
+\item Hvilken kolonne spilleren begynner på
+\item Hvilken rad spilleren begynner på
+\item Hvilken kolonne spilleren skal begynne på
+\item Hvilken rad spilleren skal ende på
+\end{enumerate}
+Så følger en rekke linjer med enkelttegn, et tegn for hver kolonne, en linje for hver rad.
+Hvert tegn svarer til en rute, som definert i alias.csv. (Disse definisjonene skal selvsagt over i den relasjonelle databasen.)
 \end{document}

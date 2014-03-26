@@ -42,14 +42,12 @@ public class Lerret extends Canvas {
 	 * @param keyboard tastaturlytteren som skal brukes. SimpleKeyboard er ikke en singleton, siden en kan tenkes at en vil ha flere tastaturlyttere, som kan kobles til flere steder.
 	 */
 	public Lerret(Level level, Player player, SimpleKeyboard keyboard){		
-		TILESIZE = level.tilesize();
-		this.størrelseIPiksler = new Dimension(level.tileColumns() * TILESIZE, level.tileRows() * TILESIZE);
+		TILESIZE = level.tilesize();		
 		brett = level;
+		this.størrelseIPiksler = calculateSize();
 		spiller = player;
 		
-		this.setPreferredSize(størrelseIPiksler);
-		this.setMinimumSize(størrelseIPiksler);
-		this.setMaximumSize(størrelseIPiksler);
+		setSizes();
 		
 		this.addKeyListener(keyboard);
 		this.setFocusable(true);
@@ -60,6 +58,8 @@ public class Lerret extends Canvas {
 	
 	public void setLevel(Level level){
 		this.brett = level;
+		this.størrelseIPiksler = calculateSize();
+		this.setSizes();
 	}
 	
 	public void tick(){
@@ -84,7 +84,7 @@ public class Lerret extends Canvas {
 		 * Sånn rekursivt, så TileLevel først male alle tiles fra (0,0) til (n_x-1, n_y-1) så male andre ting (nudge nudge, wink wink), og så returnere.
 		 * 
 		 * Siden vi ikke vet noe om hvordan brettet ser ut innvendig, eller hvordan ting skal gjøres der, så gir vi bare brettet malerpenselen, og ber den gjøre tingen sin.
-		 * Da kan vi senere bytte ut hele brett-implementasjonen med noe nytt og bedre (når jeg skrev motoren gjorde jeg det, ca. 3 ganger) uten at noe annet må endre enn at det står new TileLevel2000 istedenfor new TileLevel et sted.
+		 * Da kan vi senere bytte utnew Dimension(level.tileColumns() * TILESIZE, level.tileRows() * TILESIZE); hele brett-implementasjonen med noe nytt og bedre (når jeg skrev motoren gjorde jeg det, ca. 3 ganger) uten at noe annet må endre enn at det står new TileLevel2000 istedenfor new TileLevel et sted.
 		 * Det gjør at designet blir veldig smidig, og du kan rote rundt mer effektivt.
 		 */
 		
@@ -100,5 +100,15 @@ public class Lerret extends Canvas {
 		g.dispose();
 		bs.show();
 		
+	}
+	
+	private Dimension calculateSize(){
+		return new Dimension(this.brett.tileColumns() * TILESIZE, this.brett.tileRows() * TILESIZE);
+	}
+	
+	private void setSizes(){
+		this.setPreferredSize(størrelseIPiksler);
+		this.setMinimumSize(størrelseIPiksler);
+		this.setMaximumSize(størrelseIPiksler);
 	}
 }

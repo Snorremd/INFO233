@@ -71,7 +71,7 @@ public class Game {
 			startLevel();
 
 			long timestamp = System.nanoTime(); 				  /* Aldri bruk System.currentTimeMillis() til denne type ting. Tenk om du sitter på et tog, krysser en tidssone, og så krasjer spillet. */
-			int timesPerSecond = 1000;                            /* Hvor mange ganger i sekundet entiteter som ikke er spilleren får gjøre noe. */
+			int timesPerSecond = 120;                            /* Hvor mange ganger i sekundet entiteter som ikke er spilleren får gjøre noe. */
 			long tickFrequency = 1_000_000_000L / timesPerSecond; /* Her har vi tap av presisjon grunnet heltallsdivisjon. For vårt bruk er dette greit. */
 			long levelStartedAt = timestamp; 
 			

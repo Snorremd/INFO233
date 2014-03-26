@@ -5,7 +5,7 @@ public interface Monster extends Movable, Paintable, Tickable{
 	 * En prioritet sier noe om rekkefølgen de skal får bevege seg i.
 	 * Alle monstre med høyere prioritet skal få bevege seg før monstre med lavere prioritet.
 	 * Rekkefølgen på to like monstre med samme prioritet er udefinert og dermed opp til deg selv.
-	 * 0 er ansett som en normal prioritet. 
+	 * 0 er ansett som en normal prioritet.
 	 * @return en byte (et heltall mellom 127 og -128 inklusiv) som representerer prioriteten.
 	 */
 	public byte getPriority();
