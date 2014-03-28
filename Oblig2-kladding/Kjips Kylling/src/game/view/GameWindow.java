@@ -42,14 +42,11 @@ public class GameWindow extends JFrame {
 		if(null == lerret){
 			this.lerret = new Lerret(level, player, keyboard);
 			this.add(lerret);
-			this.pack();
-			this.setVisible(true);
 		}
-		else{
-			lerret.setLevel(level);
-			this.pack();
-		}
-		
+		this.lerret.setLevel(level);
+		this.setSize(0,0);
+		this.pack();
+		this.setVisible(true);
 	}
 		
 	public boolean popupDeath(){

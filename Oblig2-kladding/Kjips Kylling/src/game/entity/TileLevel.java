@@ -114,7 +114,7 @@ public class TileLevel implements Level {
 				if(col == startCol && row == startRow){
 					continue; /* Hopp over der spilleren starter. */
 				}
-				if(tileAt(col, row).isWalkable()){
+				if(tileAt(col, row).isWalkable() && !tileAt(col, row).isLethal()){
 					try {
 						theMonster = new ExampleMonster(this, new SpriteLoader(new File("art/monstre.png"), 64), col, row);
 						System.out.printf("[HACK] Put a monster, at (%d,%d)%n", col, row);

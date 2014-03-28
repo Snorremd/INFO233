@@ -12,16 +12,35 @@ import static game.util.EffectiveJavaHasher.*;
  *
  */
 public class TileBuilder {
+	String name;
 	int row, col, spriteX, spriteY;
 	SpriteLoader spriteloader;
 	boolean walkable, pushable, lethal;
 
+	/**
+	 * Setter opp en ny TileBuilder med nullverdier og negative tall som standardverdier.
+	 */
+	public TileBuilder(){
+		this.name = null;
+		this.row = -1;
+		this.col = -1;
+		this.spriteX = -1;
+		this.spriteY = -1;
+		this.walkable = false;
+		this.pushable = false;
+		this.lethal = false;
+	}
 	/*
 	 * Alle disse metodene er laget automatisk av GNU Emacs.
 	 * Nei, jeg har ikke giddet å lage disse for hånd. ;)
 	 * Og jeg antar at dere ikke trenger javadocs for dem.
 	 */
 
+	public TileBuilder name(String name){
+		this.name = name;
+		return this;
+	}
+	
 	public TileBuilder spriteloader(SpriteLoader spriteloader){
 		this.spriteloader = spriteloader;
 		return this;
@@ -57,10 +76,32 @@ public class TileBuilder {
 		return this;
 	}
 
+	/**
+	 * Basert på instillingene du har gitt byggeren, vil den dispense en ny rute.
+	 * @return en ny rute av type StaticTile
+	 * @throws IllegalStateException hvis du ikke instansierer alle ikke-boolske verdier.
+	 *  Dette er en RuntimeException, så du må ikke catche den.
+	 */
 	public StaticTile create() {
-		return new StaticTile(row, col, spriteloader, spriteX, spriteY, walkable, lethal);
+		if(!validState()){
+			throw new IllegalStateException("You must instantiate all non-boolean variables");
+		}
+		return new StaticTile(name, row, col, spriteloader, spriteX, spriteY, walkable, lethal);
 	}
 
+	/**
+	 * Sjekker om du kan bygge en tile fra de argumentene du har gitt byggeren.
+	 * @return true om du kan trygt kalle create, false ellers.
+	 */
+	public boolean validState(){
+		return !(null == name         ||
+				 null == spriteloader ||
+				 row < 0              ||
+				 col < 0              ||
+				 spriteX < 0          ||
+				 spriteY < 0);
+	}
+	
 	@Override
 	public boolean equals(Object obj){
 		if(null == obj) return false;

@@ -130,7 +130,7 @@ public class TileFactory {
 
 		/*
 		 *  Dette er forhåpentligvis litt lettere å holde orden på
-		 *  Enn å måtte lese gjennom en lang ugjennomtrengelig  masse av et kall til new StaticTile
+		 *  enn å måtte lese gjennom en lang ugjennomtrengelig  masse av et kall til new StaticTile
 		 */
 		return builder
 				.col(column)
@@ -140,6 +140,7 @@ public class TileFactory {
 				.spriteloader(this.sprites)
 				.walkable(this.walkable.get(name))
 				.lethal(this.lethal.get(name))
+				.name(name) /* Dette er første argumentet i konstruktøren, men vi kan gi det sist nå. */
 				.create();
 	}
 

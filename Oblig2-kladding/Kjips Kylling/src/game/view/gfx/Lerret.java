@@ -60,6 +60,8 @@ public class Lerret extends Canvas {
 		this.brett = level;
 		this.størrelseIPiksler = calculateSize();
 		this.setSizes();
+		this.setFocusable(true);
+		this.requestFocusInWindow();
 	}
 	
 	public void tick(){
@@ -107,6 +109,7 @@ public class Lerret extends Canvas {
 	}
 	
 	private void setSizes(){
+		this.setSize(størrelseIPiksler);
 		this.setPreferredSize(størrelseIPiksler);
 		this.setMinimumSize(størrelseIPiksler);
 		this.setMaximumSize(størrelseIPiksler);

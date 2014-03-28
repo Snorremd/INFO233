@@ -1,6 +1,7 @@
 package game.entity.monster;
 
 import game.entity.types.Level;
+import game.entity.types.Tile;
 import game.util.Direction;
 import game.util.Mover;
 import game.view.gfx.SpriteLoader;
@@ -28,7 +29,7 @@ public class ExampleMonster extends AbstractMonster {
 		/*
 		 * Vi bruker altså den øverste raden i spritesheeten monstre
 		 */
-		super(column, row, level, loader, 0);
+		super(column, row, level, loader, new Random().nextInt(6));
 	}
 
 	@Override
@@ -48,7 +49,8 @@ public class ExampleMonster extends AbstractMonster {
 		ArrayList<Direction> placesWeCanGo = new ArrayList<>(4);
 		for(Direction d : directions){
 			int[] pos = Mover.position(d, getColumn(), getRow());
-			if(level.walkable(pos[Mover.COLUMN], pos[Mover.ROW])){
+			Tile place = level.tileAt(pos[Mover.COLUMN], pos[Mover.ROW]);
+			if(null != place && place.isWalkable() && ! place.isLethal()){
 				placesWeCanGo.add(d);
 			}
 		}

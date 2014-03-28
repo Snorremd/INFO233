@@ -25,6 +25,7 @@ public class Game {
 	protected ResourceLoader loader;
 	protected GameWindow window;
 	protected Level level;
+	protected int currentLevel = 0;
 
 	/**
 	 * Skaper en ny kontroller.
@@ -61,7 +62,7 @@ public class Game {
 	 * @throws BuildLevelException Dersom lastingen av et brett går galt. Se: {@link ResourceLoader#getLevel(int)} for detaljene
 	 */
 	public void start() throws LevelNotFoundException, BuildLevelException {
-		int currentLevel = 1;
+		currentLevel = 1;
 
 		while(currentLevel <= loader.getNumLevels()){
 			/* Sett brettet til nytt brett hver gang du klarer ett brett.
@@ -83,7 +84,8 @@ public class Game {
 				if(level.isPlaceDeadly(player.getColumn(), player.getRow())){
 					boolean restart = window.popupDeath();
 					if(restart){
-						startLevel();
+						level.reset(player);
+						window.loadLevel(level);
 						continue;
 					}
 					else{

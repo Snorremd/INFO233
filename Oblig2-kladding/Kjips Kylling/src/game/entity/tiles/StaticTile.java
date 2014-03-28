@@ -18,8 +18,8 @@ import game.view.gfx.SpriteLoader;
  *
  */
 public class StaticTile implements Tile{
+	protected String name;
 	protected int row, col, tilesize;
-	protected Direction dir;
 	protected SpriteLoader sl;
 	protected int spriteX, spriteY;
 	protected boolean walkable, lethal;
@@ -36,8 +36,8 @@ public class StaticTile implements Tile{
 	 * @param walkable om du kan gå på den. Merk at en tile ikke kan være walkable og pushable.
 	 * @param lethal om du dør om du tar i den. (Tenk lava, syrebad, etc.)
 	 */
-	public StaticTile(int row, int col, SpriteLoader spriteloader, int spriteX, int spriteY, boolean walkable, boolean lethal) {
-		
+	public StaticTile(String name, int row, int col, SpriteLoader spriteloader, int spriteX, int spriteY, boolean walkable, boolean lethal) {
+		this.name = name;
 		this.row = row;
 		this.col = col;
 		this.sl = spriteloader;
@@ -53,6 +53,10 @@ public class StaticTile implements Tile{
 		gfx.drawImage(sl.getImage(spriteX, spriteY), col*sl.tilesize(), row*sl.tilesize(), null);
 	}
 
+	@Override public String getName(){
+		return name;
+	}
+	
 	@Override
 	public int getRow() {
 		return row;
