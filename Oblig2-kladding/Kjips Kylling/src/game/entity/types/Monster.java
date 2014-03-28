@@ -1,5 +1,11 @@
 package game.entity.types;
 
+/**
+ * Et monster er en skapning som beveger seg rundt på brettet som ikke er spilleren.
+ * 
+ * @author Haakon Løtveit (haakon.lotveit@student.uib.no)
+ *
+ */
 public interface Monster extends Movable, Paintable, Tickable{
 	/**
 	 * En prioritet sier noe om rekkefølgen de skal får bevege seg i.

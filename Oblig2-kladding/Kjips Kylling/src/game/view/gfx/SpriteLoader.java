@@ -27,7 +27,7 @@ public class SpriteLoader {
 	 * 
 	 * @param spriteSheet en bitmap av et slag, helst .png, andre formater er ikke testet.
 	 * @param tilesize hvor stor en sprite er. I vårt spill er tiles kvadratiske, så bare en verdi, ikke en for x og en for y.
-	 * @throws IOException dersom filen ikke blir lastet inn korrekt. (For eksempel om filen ikke finnes.)
+	 * @throws IOException dersom filen ikke blir lastet inn korrekt. (For eksempel om filen ikke finnes, eller filformatet ikke støttes.)
 	 * 
 	 */
 	public SpriteLoader(File spriteSheet, int tilesize) throws IOException{
@@ -89,7 +89,7 @@ public class SpriteLoader {
 	
 	/**
 	 * Antall rader i arket.
-	 * @return rader i arket. Merk kolonner, ikke piksler.
+	 * @return rader i arket. Merk rader, ikke piksler.
 	 */
 	public int numRows(){
 		return SHEET.getHeight() / TILESIZE;
