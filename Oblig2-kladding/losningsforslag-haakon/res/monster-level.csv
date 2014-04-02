@@ -1,0 +1,7 @@
+monstername,levelname,monster-column,monster-row,patrol
+VenstreMonster,The Labyrinth,6,9,NONE
+HøyreMonster,The Labyrinth,2,0,NONE
+HøyreMonster,Water Park Panic,4,1,NONE
+VenstreHøyreMonster,Water Park Panic,9,1,NONE
+PatruljeMonster,Monster Madness,10,2,SWWWSWWNNNNWWSSEENEEEENEESSW
+MålsøkendeMonster,Monster Madness,12,5,NONE

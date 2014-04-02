@@ -1,0 +1,7 @@
+monsternavn,sheetrow,spritesheet,priority
+HøyreMonster,0,monstre,0
+MålsøkendeMonster,1,monstre,10
+OppNedMonster,2,monstre,-5
+PatruljeMonster,3,monstre,5
+VenstreHøyreMonster,4,monstre,-5
+VenstreMonster,5,monstre,0

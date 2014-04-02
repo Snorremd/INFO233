@@ -1,0 +1,1 @@
+INSERT INTO SPRITESHEETS VALUES (sheetname, location, tilesize) (? ? ?)

@@ -1,0 +1,16 @@
+----------------------------------------------------------------
+Wed Apr 02 12:13:41 CEST 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.1.1 - (1458268): instance a816c00e-0145-21ee-0fe3-000002f1a7e8 
+on database directory /home/haakon/workspace/Kjips Kylling Løsningsforslag - Haakon/sql-db with class loader sun.misc.Launcher$AppClassLoader@1978b0f9 
+Loaded from file:/home/haakon/workspace/Kjips%20Kylling%20L%c3%b8sningsforslag%20-%20Haakon/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_51-b00
+user.dir=/home/haakon/workspace/Kjips Kylling Løsningsforslag - Haakon
+os.name=Linux
+os.arch=amd64
+os.version=3.11.0-18-generic
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Wed Apr 02 12:14:27 CEST 2014:
+Shutting down instance a816c00e-0145-21ee-0fe3-000002f1a7e8 on database directory /home/haakon/workspace/Kjips Kylling Løsningsforslag - Haakon/sql-db with class loader sun.misc.Launcher$AppClassLoader@1978b0f9 

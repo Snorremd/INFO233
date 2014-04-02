@@ -1,0 +1,115 @@
+package game.io;
+
+import game.entity.tiles.TileFactory;
+import game.entity.types.Level;
+import game.view.gfx.SpriteLoader;
+
+import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+public class ResourceLoaderSQL implements ResourceLoader {
+	public static void reBuildDataBase() throws SQLException, FileNotFoundException{
+		Map<String, String> tableDefinitions = new HashMap<>(6);
+		Map<String, String> tableInserts = new HashMap<>(6);
+		Set<String> existingTables = new HashSet<>(6);
+
+		String[] rekkefølge = {
+			"SPRITESHEETS",
+			"STANDARDTILES",
+			"ALIASES",
+			"LEVELS",
+			"MONSTER",
+			"MONSTERLEVEL",
+		};
+		
+		tableDefinitions.put(rekkefølge[0], IOStuff.slurpFile("sql/definition/spritesheets.sql"));
+		tableDefinitions.put(rekkefølge[1], IOStuff.slurpFile("sql/definition/standard-tiles.sql"));
+		tableDefinitions.put(rekkefølge[2], IOStuff.slurpFile("sql/definition/aliases.sql"));
+		tableDefinitions.put(rekkefølge[3], IOStuff.slurpFile("sql/definition/levels.sql"));
+		tableDefinitions.put(rekkefølge[4], IOStuff.slurpFile("sql/definition/monster.sql"));
+		tableDefinitions.put(rekkefølge[5], IOStuff.slurpFile("sql/definition/monster-level.sql"));
+
+		tableInserts.put(rekkefølge[0], IOStuff.slurpFile("sql/insert/spritesheets.sql"));
+		tableInserts.put(rekkefølge[1], IOStuff.slurpFile("sql/insert/standard-tiles.sql"));
+//		tableInserts.put(rekkefølge[2], IOStuff.slurpFile("sql/insert/aliases.sql"));
+//		tableInserts.put(rekkefølge[3], IOStuff.slurpFile("sql/insert/levels.sql"));
+//		tableInserts.put(rekkefølge[4], IOStuff.slurpFile("sql/insert/monster.sql"));
+//		tableInserts.put(rekkefølge[5], IOStuff.slurpFile("sql/insert/monster-level.sql"));
+		
+
+		String getTables = IOStuff.slurpFile("sql/defined-tables.sql");
+
+		try(Connection conn = ConnectionHolder.getConnection()){
+			/* Finner ut hvilke tabeller som er der fra før av */
+			try(PreparedStatement registeredTables = conn.prepareStatement(getTables)){
+				try(ResultSet rs = registeredTables.executeQuery()){
+					while(rs.next()){
+						String tableName = rs.getString("tablename");
+						System.out.println(tableName);
+						existingTables.add(tableName);
+					}
+				}
+			}
+			/* Fjern dem i korrekt rekkefølge */
+			for(int i = rekkefølge.length - 1; i >= 0; --i){
+				String theBase = String.format("DROP TABLE %s", rekkefølge[i]);
+				if(existingTables.contains(rekkefølge[i])){
+					try(Statement drop = conn.createStatement()){
+						drop.execute(theBase);
+					}
+				}
+			}
+			/* Lag på nytt i korrekt rekkefølge */
+			for(int i = 0; i < rekkefølge.length; ++i){
+				try(PreparedStatement create = conn.prepareStatement(tableDefinitions.get(rekkefølge[i]))){
+					create.execute();
+				}
+			}
+			
+			/* Sett inn i rekkefølge */
+		}
+		
+	}
+
+	@Override
+	public Level getLevel(String name) throws LevelNotFoundException,
+	BuildLevelException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Level getLevel(int number) throws LevelNotFoundException,
+	BuildLevelException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SpriteLoader getSpriteLoader(String name)
+			throws SpriteSheetNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TileFactory getTileFactory() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getNumLevels() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}

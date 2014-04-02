@@ -1,0 +1,63 @@
+package game.entity.monster;
+
+import game.entity.SimplePlayer;
+import game.entity.types.Level;
+import game.util.Direction;
+import game.util.Mover;
+import game.view.gfx.SpriteLoader;
+
+public class MålsøkendeMonster extends AbstractMonster {
+	protected byte priority;
+	private int tickCounter = 0;
+	
+	public MålsøkendeMonster(Level level, SpriteLoader loader, int column, int row, byte priority){
+		super(column, row, level, loader, 2);
+		this.priority = priority;		
+		this.setDirection(Direction.SOUTH);
+	}
+
+	@Override
+	public void tick() {
+		/* Bare gjør noe hver nte tick. */
+		int nteTick = 54;
+		if((tickCounter++ % nteTick) != 0){
+			return;
+		}
+		
+		/* Finn ut hvilken retning som peker mest mot spilleren */		
+		int deltaCol = SimplePlayer.getInstance().getColumn() - this.getColumn();
+		int deltaRow = SimplePlayer.getInstance().getRow() - this.getRow();
+		if(deltaCol == 0 && deltaRow == 0){
+			return; /* Vi er oppå spilleren, så vi gjør ingenting. OMNOMNOM! */
+		}
+		
+		if(deltaCol > deltaRow){
+			if(deltaCol > 0){
+				/* Spilleren er øst for monstret */
+				this.facingDirection = Direction.EAST;
+			}
+			else{
+				/* Spilleren er vest for monstret */
+				this.facingDirection = Direction.WEST;
+			}
+		}
+		else{
+			if(deltaRow > 0){
+				/* Spilleren er sør for monstret */
+				this.facingDirection = Direction.SOUTH;
+			}
+			else{
+				/* Spilleren er nord for monstret */
+				this.facingDirection = Direction.NORTH;
+			}
+		}
+		
+		
+	}
+
+	@Override
+	public byte getPriority() {
+		return priority;
+	}
+
+}

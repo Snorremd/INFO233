@@ -1,0 +1,5 @@
+CREATE TABLE HighScore (
+       levelName VARCHAR(128),
+       tenthsOfSeconds INT,
+       FOREIGN KEY levelName REFERENCES Levels (levelname)
+       )
